@@ -26,6 +26,7 @@ IMG_NAME = $(BUILD_DIR)/kernel.img
 # Setup derived variables
 VPATH := src
 $(foreach dir,$(SRC_DIRS),$(eval VPATH := $(VPATH):$(dir)))
+$(foreach dir,$(SRC_DIRS),$(eval INCLUDES := $(INCLUDES) -I $(dir)))
 SOURCES = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c))
 ASM_SOURCES = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.S))
 OBJECTS := $(patsubst %.c, $(OBJ_DIR)/%.o, $(notdir $(SOURCES)))
@@ -39,11 +40,11 @@ build: $(OBJECTS) $(HEADERS)
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -I$(SRC_DIRS) -$(HEADERS) -c $< -o $@ $(CSRCFLAGS)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ $(CSRCFLAGS)
 
 $(OBJ_DIR)/%.o: %.S
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -I$(SRC_DIRS) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	rm -rf $(OBJ_DIR)
