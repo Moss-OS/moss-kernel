@@ -1,14 +1,14 @@
 #include <stddef.h>
 #include <stdint.h>
 
-static inline void mmio_write(uint32_t reg, uint32_t data)
+static inline void mmio_write(uint64_t reg, uint64_t data)
 {
-    *(volatile uint32_t*)reg = data;
+    *(volatile uint64_t*)reg = data;
 }
 
-static inline uint32_t mmio_read(uint32_t reg)
+static inline uint64_t mmio_read(uint64_t reg)
 {
-    return *(volatile uint32_t*)reg;
+    return *(volatile uint64_t*)reg;
 }
 
 // Loop <delay> times in a way that the compiler won't optimize away
@@ -92,7 +92,7 @@ void uart_puts(const char* str)
         uart_putc((unsigned char)str[i]);
 }
 
-void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
+void kernel_main(uint64_t r0, uint64_t r1, uint64_t atags)
 {
     (void) r0;
     (void) r1;
