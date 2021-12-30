@@ -14,6 +14,7 @@ QEMU_RAM = 1024
 # Source directories (add additional subdirectories here)
 SRC_DIRS  = src/bootstrapper
 SRC_DIRS += src/kernel
+SRC_DIRS += src/peripherals
 SRC_DIRS += src/common
 
 # Output directories
