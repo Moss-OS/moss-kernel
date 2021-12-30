@@ -19,7 +19,7 @@ SRC_DIRS += src/common
 # Output directories
 BUILD_DIR = build
 OBJ_DIR = $(BUILD_DIR)/obj
-IMG_NAME = $(BUILD_DIR)/kernel.img
+IMG_NAME = $(BUILD_DIR)/kernel8.img
 
 # Setup derived variables
 VPATH := src
