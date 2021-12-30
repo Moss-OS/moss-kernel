@@ -1,2 +1,3 @@
-build/obj
-build/kernel.img
+/build/obj
+/build/kernel.img
+/build/aarch64-unknown-linux-gnu

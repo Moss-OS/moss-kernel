@@ -1,21 +1,19 @@
-# Use the ARM cross compiler
-CC = /usr/local/bin/arm-none-eabi-gcc
-
 # Compiler flags
-CFLAGS = -mcpu=$(CPU) -fpic -ffreestanding $(DIRECTIVES)
+AARCH64_TOOLCHAIN_DIR = build/aarch64-unknown-linux-gnu
+ARM_GCC = $(AARCH64_TOOLCHAIN_DIR)/bin/aarch64-unknown-linux-gnu-gcc
+CFLAGS = -mcpu=$(CPU) -fpic -ffreestanding
 CSRCFLAGS = -O2 -Wall -Wextra
 LDFLAGS = -ffreestanding -O2 -nostdlib
 
-# Constants based on Raspberry Pi model.
-ifeq ($(RASPI_MODEL),1)
-	CPU = arm1176jzf-s
-	DIRECTIVES = -D MODEL_1
-else
-	CPU = cortex-a7
-endif
+# Machine and emulator targets
+CPU = cortex-a53
+QEMU_COMMAND = qemu-system-aarch64
+QEMU_MACHINE = raspi3b
+QEMU_RAM = 1024
 
 # Source directories (add additional subdirectories here)
-SRC_DIRS  = src/kernel
+SRC_DIRS  = src/bootstrapper
+SRC_DIRS += src/kernel
 SRC_DIRS += src/common
 
 # Output directories
@@ -35,20 +33,24 @@ HEADERS = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.h))
 
 # Targets
 build: $(OBJECTS) $(HEADERS)
-	@echo $(OBJECTS)
-	$(CC) -T $(BUILD_DIR)/linker.ld -o $(IMG_NAME) $(LDFLAGS) $(OBJECTS)
+	@echo "==>" linking $(OBJECTS)
+	$(ARM_GCC) -T $(BUILD_DIR)/linker.ld -o $(IMG_NAME) $(LDFLAGS) $(OBJECTS)
 
 $(OBJ_DIR)/%.o: %.c
+	@echo "==>" compiling $<
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ $(CSRCFLAGS)
+	$(ARM_GCC) $(CFLAGS) $(INCLUDES) -c $< -o $@ $(CSRCFLAGS)
 
 $(OBJ_DIR)/%.o: %.S
+	@echo "==>" building $<
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(ARM_GCC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
+	@echo "==>" removing assets
 	rm -rf $(OBJ_DIR)
 	rm -f $(IMG_NAME)
 
 emu: build
-	qemu-system-arm -m 1024 -M raspi2b -serial stdio -kernel $(IMG_NAME)
+	@echo "==>" starting emulator
+	$(QEMU_COMMAND) -m $(QEMU_RAM) -machine type=$(QEMU_MACHINE) -serial stdio -kernel $(IMG_NAME)
