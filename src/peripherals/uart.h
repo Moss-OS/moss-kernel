@@ -41,12 +41,6 @@ static inline uint64_t mmio_read(uint64_t reg) {
     return *(volatile uint64_t*)reg;
 }
 
-// Loop <delay> times in a way that the compiler won't optimize away
-static inline void delay(int32_t count) {
-    asm volatile("__delay_%=: subs %[count], %[count], #1; bne __delay_%=\n"
-            : "=r"(count): [count]"0"(count) : "cc");
-}
-
 void uart_init();
 
 void uart_putc(unsigned char c);
