@@ -1,5 +1,5 @@
-#ifndef STDIO_H
-#define STDIO_H
+#ifndef _STDIO_H
+#define _STDIO_H
 
 char getc(void);
 void putc(char c);
@@ -10,4 +10,4 @@ void puts(const char * s);
 // whichever comes first
 void gets(char * buf, int buflen);
 
-#endif
+#endif /* _STDIO_H */
