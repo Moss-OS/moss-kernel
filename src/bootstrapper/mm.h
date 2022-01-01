@@ -8,7 +8,9 @@
 #define PAGE_SIZE   			(1 << PAGE_SHIFT)
 #define SECTION_SIZE			(1 << SECTION_SHIFT)
 
-#define LOW_MEMORY              	(2 * SECTION_SIZE)
+#define LOW_MEMORY              (2 * SECTION_SIZE)
+
+#define STACK_SIZE              (1 << 20)
 
 #ifndef __ASSEMBLER__
 
