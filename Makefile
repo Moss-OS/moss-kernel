@@ -28,8 +28,8 @@ $(foreach dir,$(SRC_DIRS),$(eval VPATH := $(VPATH):$(dir)))
 $(foreach dir,$(SRC_DIRS),$(eval INCLUDES := $(INCLUDES) -I $(dir)))
 SOURCES = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c))
 ASM_SOURCES = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.S))
-OBJECTS := $(patsubst %.c, $(OBJ_DIR)/%.o, $(notdir $(SOURCES)))
-OBJECTS += $(patsubst %.S, $(OBJ_DIR)/%.o, $(notdir $(ASM_SOURCES)))
+OBJECTS := $(patsubst %.c, $(OBJ_DIR)/%_c.o, $(notdir $(SOURCES)))
+OBJECTS += $(patsubst %.S, $(OBJ_DIR)/%_s.o, $(notdir $(ASM_SOURCES)))
 HEADERS = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.h))
 
 # Targets
@@ -37,12 +37,12 @@ build: $(OBJECTS) $(HEADERS)
 	@echo "==>" linking $(OBJECTS)
 	$(ARM_GCC) -T $(BUILD_DIR)/linker.ld -o $(IMG_NAME) $(LDFLAGS) $(OBJECTS)
 
-$(OBJ_DIR)/%.o: %.c
+$(OBJ_DIR)/%_c.o: %.c
 	@echo "==>" compiling $<
 	@mkdir -p $(@D)
 	$(ARM_GCC) $(CFLAGS) $(INCLUDES) -c $< -o $@ $(CSRCFLAGS)
 
-$(OBJ_DIR)/%.o: %.S
+$(OBJ_DIR)/%_s.o: %.S
 	@echo "==>" building $<
 	@mkdir -p $(@D)
 	$(ARM_GCC) $(CFLAGS) $(INCLUDES) -c $< -o $@
