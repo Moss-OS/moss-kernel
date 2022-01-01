@@ -1,4 +1,5 @@
 #include "uart.h"
+#include "../common/utils.h"
 
 void uart_init()
 {
