@@ -1,9 +1,9 @@
 # Compiler flags
 AARCH64_TOOLCHAIN_DIR = build/aarch64-unknown-linux-gnu
-ARM_GCC = $(AARCH64_TOOLCHAIN_DIR)/bin/aarch64-unknown-linux-gnu-gcc
-CFLAGS = -mcpu=$(CPU) -fpic -ffreestanding
-CSRCFLAGS = -O2 -Wall -Wextra
-LDFLAGS = -ffreestanding -O2 -nostdlib
+ARMGNU = $(AARCH64_TOOLCHAIN_DIR)/bin/aarch64-unknown-linux-gnu
+CFLAGS = -Wall -Wextra -ffreestanding -mgeneral-regs-only -MMD -mcpu=$(CPU)
+ASMFLAGS = -MMD
+LDFLAGS = -nostdlib -nostartfiles
 
 # Machine and emulator targets
 CPU = cortex-a53
@@ -20,7 +20,9 @@ SRC_DIRS += src/common
 # Output directories
 BUILD_DIR = build
 OBJ_DIR = $(BUILD_DIR)/obj
-IMG_NAME = $(BUILD_DIR)/kernel8.img
+IMAGE = kernel8
+BIN_NAME = $(BUILD_DIR)/$(IMAGE).elf
+IMG_NAME = $(BUILD_DIR)/$(IMAGE).img
 
 # Setup derived variables
 VPATH := src
@@ -35,21 +37,23 @@ HEADERS = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.h))
 # Targets
 build: $(OBJECTS) $(HEADERS)
 	@echo "==>" linking $(OBJECTS)
-	$(ARM_GCC) -T $(BUILD_DIR)/linker.ld -o $(IMG_NAME) $(LDFLAGS) $(OBJECTS)
+	$(ARMGNU)-ld $(LDFLAGS) -T $(BUILD_DIR)/linker.ld -o $(BIN_NAME) $(OBJECTS)
+	$(ARMGNU)-objcopy $(BIN_NAME) -O binary $(IMG_NAME)
 
 $(OBJ_DIR)/%_c.o: %.c
 	@echo "==>" compiling $<
 	@mkdir -p $(@D)
-	$(ARM_GCC) $(CFLAGS) $(INCLUDES) -c $< -o $@ $(CSRCFLAGS)
+	$(ARMGNU)-gcc $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJ_DIR)/%_s.o: %.S
 	@echo "==>" building $<
 	@mkdir -p $(@D)
-	$(ARM_GCC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(ARMGNU)-gcc $(ASMFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	@echo "==>" removing assets
 	rm -rf $(OBJ_DIR)
+	rm -f $(BIN_NAME)
 	rm -f $(IMG_NAME)
 
 emu: build

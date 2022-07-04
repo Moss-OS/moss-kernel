@@ -1,3 +1,4 @@
 /build/obj
 /build/kernel8.img
+/build/kernel8.elf
 /build/aarch64-unknown-linux-gnu
