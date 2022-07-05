@@ -3,11 +3,11 @@
 #include "stdlib.h"
 
 char getc() {
-    return uart_getc();
+    return uart_recv();
 }
 
 void putc(char c) {
-    uart_putc(c);
+    uart_send(c);
 }
 
 void puts(const char * str) {

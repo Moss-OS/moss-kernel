@@ -4,16 +4,21 @@
 #include <stdint.h>
 
 enum {
-    // The GPIO registers base address.
-    GPIO_BASE = 0x3F200000, // for raspi2 & 3, 0x20200000 for raspi1
+	// The GPIO registers base address.
+	//GPIO_BASE		= 0x20200000 // raspi1
+	//GPIO_BASE		= 0x3f200000 // raspi2 & 3
+	GPIO_BASE		= 0xFE200000, // raspi4
 
-    GPPUD = (GPIO_BASE + 0x94),
-    GPPUDCLK0 = (GPIO_BASE + 0x98),
+	// GPIO
+	GPFSEL1		= (GPIO_BASE + 0x04),
+	GPSET0		= (GPIO_BASE + 0x1C),
+	GPCLR0		= (GPIO_BASE + 0x28),
+	GPPUD		= (GPIO_BASE + 0x94),
+	GPPUDCLK0	= (GPIO_BASE + 0x98),
 
-    // The base address for UART.
-    UART0_BASE = 0x3F201000, // for raspi2 & 3, 0x20201000 for raspi1
-
-    UART0_DR     = (UART0_BASE + 0x00),
+	// The base address for UART.
+	UART0_BASE   = (GPIO_BASE + 0x1000),
+	UART0_DR     = (UART0_BASE + 0x00),
     UART0_RSRECR = (UART0_BASE + 0x04),
     UART0_FR     = (UART0_BASE + 0x18),
     UART0_ILPR   = (UART0_BASE + 0x20),
@@ -33,14 +38,6 @@ enum {
     UART0_TDR    = (UART0_BASE + 0x8C),
 };
 
-static inline void mmio_write(uint64_t reg, uint64_t data) {
-    *(volatile uint64_t*)reg = data;
-}
-
-static inline uint64_t mmio_read(uint64_t reg) {
-    return *(volatile uint64_t*)reg;
-}
-
 void uart_init();
 
 void uart_putc(unsigned char c);
@@ -48,4 +45,4 @@ unsigned char uart_getc();
 
 void uart_puts(const char* str);
 
-#endif  /*_UAART_H */
+#endif  /*_UART_H */
