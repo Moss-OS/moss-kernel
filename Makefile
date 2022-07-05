@@ -7,9 +7,9 @@ LDFLAGS = -nostdlib -nostartfiles
 
 # Machine and emulator targets
 CPU = cortex-a53
-QEMU_COMMAND = qemu-system-aarch64
-QEMU_MACHINE = raspi3b
-QEMU_RAM = 1024
+QEMU_COMMAND = ~/Code/ThirdParty/qemu-patch-raspberry4/build/qemu-system-aarch64
+QEMU_MACHINE = raspi4b2g
+QEMU_RAM = 2048
 
 # Source directories (add additional subdirectories here)
 SRC_DIRS  = src/bootstrapper
