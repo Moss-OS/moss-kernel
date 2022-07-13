@@ -1,38 +1,30 @@
-#include <stdint.h>
-#include "../common/stdio.h"
-#include "../common/utils.h"
 #include "../peripherals/uart.h"
 
-volatile unsigned int semaphore = 0;
+static unsigned int current_processor_index = 0;
 
-void kernel_do(int id)
+void kernel_main(unsigned long processor_index)
 {
-	// Wait for previous CPU to finish printing
-	while(id != semaphore) { }
 
-	puts("Hello, from processor ");
-	putc(id + '0');
-	puts("\r\n");
+	if (processor_index == 0) {
+		uart_init();
+	}
 
-	// Tells the next CPU to go
-	semaphore++;
+	while (processor_index != current_processor_index) { }
 
-    // Only CPU #0 do the echo
-	if (id == 0) {
-		// Wait for everyone else to finish
-		while(semaphore != 4) { }
+	uart_send_string("Hello from processor ");
+	uart_send(processor_index + '0');
+	uart_send_string("!\r\n");
+
+	// Tell the next core to go
+	current_processor_index++;
+
+	// Only core 0 do the echo
+	if (processor_index == 0) {
+		// if current_processor_index == 4 then all processors are done
+		while (current_processor_index != 4) { }
 
 		while (1) {
-			putc(getc());
+			uart_send(uart_recv());
 		}
 	}
-}
-
-void kernel_main(void) {
-	uart_init();
-	kernel_do(0);
-}
-
-void kernel_secondary(int core_id) {
-	kernel_do(core_id);
 }
