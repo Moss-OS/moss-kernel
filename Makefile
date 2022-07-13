@@ -1,7 +1,7 @@
 # Compiler flags
 AARCH64_TOOLCHAIN_DIR = build/aarch64-unknown-linux-gnu
 ARMGNU = $(AARCH64_TOOLCHAIN_DIR)/bin/aarch64-unknown-linux-gnu
-CFLAGS = -Wall -Wextra -ffreestanding -mgeneral-regs-only -MMD -mcpu=$(CPU)
+CFLAGS = -Wall -Wextra -ffreestanding -mgeneral-regs-only -mcpu=$(CPU)
 ASMFLAGS = -MMD
 LDFLAGS = -nostdlib -nostartfiles
 
