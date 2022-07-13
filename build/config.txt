@@ -1,0 +1,11 @@
+# https://www.raspberrypi.com/documentation/computers/config_txt.html
+
+# Enable 64 bit kernel support
+arm_64bit=1
+
+# Enable boot logging
+enable_uart=1
+uart_2ndstage=1
+
+# Stop start.elf from filling in ATAGS
+disable_commandline_tags=1
