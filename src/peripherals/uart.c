@@ -32,21 +32,21 @@ void uart_init (void)
 	put32(UART0_CR, 1 | (1<<8) | (1<<9));  // enable UART, receive and transmit
 }
 
-void uart_send (char c)
+void uart_send (unsigned char c)
 {
 	// wait for transmit FIFO to have an available slot
 	while(get32(UART0_FR) & (1<<5)) { }
 	put32(UART0_DR, c);
 }
 
-char uart_recv ()
+unsigned char uart_recv ()
 {
 	// wait for receive FIFO to have data to read
 	while(get32(UART0_FR) & (1<<4)) { }
 	return(get32(UART0_DR) & 0xFF);
 }
 
-void uart_send_string(char* str)
+void uart_send_string(const char* str)
 {
 	for (int i = 0; str[i] != '\0'; i ++) {
 		uart_send((char) str[i]);
