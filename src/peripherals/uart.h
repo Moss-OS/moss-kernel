@@ -40,9 +40,9 @@ enum {
 
 void uart_init();
 
-void uart_putc(unsigned char c);
-unsigned char uart_getc();
+void uart_send(unsigned char c);
+unsigned char uart_recv();
 
-void uart_puts(const char* str);
+void uart_send_string(const char* str);
 
 #endif  /*_UART_H */
