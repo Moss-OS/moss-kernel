@@ -2,14 +2,13 @@
 AARCH64_TOOLCHAIN_DIR = build/aarch64-unknown-linux-gnu
 ARMGNU = $(AARCH64_TOOLCHAIN_DIR)/bin/aarch64-unknown-linux-gnu
 CFLAGS = -Wall -Wextra -ffreestanding -mgeneral-regs-only -mcpu=$(CPU)
-ASMFLAGS = -MMD
+ASMFLAGS =
 LDFLAGS = -nostdlib -nostartfiles
 
 # Machine and emulator targets
+PLATFORM ?= raspi4 # Add PLATFORM="raspi3" to override, don't forget to make clean
 CPU = cortex-a53
 QEMU_COMMAND = ~/Code/ThirdParty/qemu-patch-raspberry4/build/qemu-system-aarch64
-QEMU_MACHINE = raspi4b2g
-QEMU_RAM = 2048
 
 # Source directories (add additional subdirectories here)
 SRC_DIRS  = src/bootstrapper
@@ -43,7 +42,7 @@ build: $(OBJECTS) $(HEADERS)
 $(OBJ_DIR)/%_c.o: %.c
 	@echo "==>" compiling $<
 	@mkdir -p $(@D)
-	$(ARMGNU)-gcc $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(ARMGNU)-gcc -D $(PLATFORM) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJ_DIR)/%_s.o: %.S
 	@echo "==>" building $<
@@ -58,4 +57,8 @@ clean:
 
 emu: build
 	@echo "==>" starting emulator
-	$(QEMU_COMMAND) -m $(QEMU_RAM) -machine type=$(QEMU_MACHINE) -serial stdio -kernel $(IMG_NAME)
+    ifeq ("$(PLATFORM)","raspi3")
+		$(QEMU_COMMAND) -m 1024 -machine type=raspi3b -serial stdio -kernel $(IMG_NAME)
+    else
+		$(QEMU_COMMAND) -m 2048 -machine type=raspi4b2g -serial stdio -kernel $(IMG_NAME)
+    endif
