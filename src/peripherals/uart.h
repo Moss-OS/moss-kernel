@@ -5,9 +5,14 @@
 
 enum {
 	// The GPIO registers base address.
-	//GPIO_BASE		= 0x20200000 // raspi1
-	//GPIO_BASE		= 0x3f200000 // raspi2 & 3
-	GPIO_BASE		= 0xFE200000, // raspi4
+	//GPIO_BASE		= 0x20200000,   // raspi1
+#if defined (raspi3)
+	GPIO_BASE		= 0x3f200000,   // raspi2 & 3
+#elif defined (raspi4)
+	GPIO_BASE		= 0xFE200000,   // raspi4
+#else // default to raspi4
+	GPIO_BASE		= 0xFE200000,
+#endif
 
 	// GPIO
 	GPFSEL1		= (GPIO_BASE + 0x04),
