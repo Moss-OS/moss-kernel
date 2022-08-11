@@ -1,3 +1,8 @@
+.globl get_core_info
+get_core_info:
+	mrs x0, midr_el1
+	ret
+
 .globl get_core_id
 get_core_id:
 	mrs x0, mpidr_el1
