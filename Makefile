@@ -42,7 +42,7 @@ build: $(OBJECTS) $(HEADERS)
 $(OBJ_DIR)/%_c.o: %.c
 	@echo "==>" compiling $<
 	@mkdir -p $(@D)
-	$(ARMGNU)-gcc -D $(PLATFORM) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(ARMGNU)-gcc $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJ_DIR)/%_s.o: %.S
 	@echo "==>" building $<

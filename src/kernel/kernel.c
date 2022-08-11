@@ -1,4 +1,5 @@
 #include "../peripherals/uart.h"
+#include "../common/utils.h"
 
 static unsigned int current_processor_index = 0;
 
@@ -7,6 +8,19 @@ void kernel_main(unsigned long processor_index)
 
 	if (processor_index == 0) {
 		uart_init();
+
+		switch (get_raspi_ver()) {
+			case RASPI3:
+				uart_send_string("We're a raspi3\r\n");
+				break;
+
+			case RASPI4:
+				uart_send_string("We're a raspi4\r\n");
+				break;
+
+			default:
+				uart_send_string("I don't know what we are!?!?!?\r\n");
+		}
 	}
 
 	while (processor_index != current_processor_index) { }

@@ -3,45 +3,36 @@
 #include <stddef.h>
 #include <stdint.h>
 
-enum {
-	// The GPIO registers base address.
-	//GPIO_BASE		= 0x20200000,   // raspi1
-#if defined (raspi3)
-	GPIO_BASE		= 0x3f200000,   // raspi2 & 3
-#elif defined (raspi4)
-	GPIO_BASE		= 0xFE200000,   // raspi4
-#else // default to raspi4
-	GPIO_BASE		= 0xFE200000,
-#endif
+// The GPIO registers base address.
+unsigned int	GPIO_BASE;
 
-	// GPIO
-	GPFSEL1		= (GPIO_BASE + 0x04),
-	GPSET0		= (GPIO_BASE + 0x1C),
-	GPCLR0		= (GPIO_BASE + 0x28),
-	GPPUD		= (GPIO_BASE + 0x94),
-	GPPUDCLK0	= (GPIO_BASE + 0x98),
+// GPIO
+unsigned int	GPFSEL1;
+unsigned int	GPSET0;
+unsigned int	GPCLR0;
+unsigned int	GPPUD;
+unsigned int	GPPUDCLK0;
 
-	// The base address for UART.
-	UART0_BASE   = (GPIO_BASE + 0x1000),
-	UART0_DR     = (UART0_BASE + 0x00),
-    UART0_RSRECR = (UART0_BASE + 0x04),
-    UART0_FR     = (UART0_BASE + 0x18),
-    UART0_ILPR   = (UART0_BASE + 0x20),
-    UART0_IBRD   = (UART0_BASE + 0x24),
-    UART0_FBRD   = (UART0_BASE + 0x28),
-    UART0_LCRH   = (UART0_BASE + 0x2C),
-    UART0_CR     = (UART0_BASE + 0x30),
-    UART0_IFLS   = (UART0_BASE + 0x34),
-    UART0_IMSC   = (UART0_BASE + 0x38),
-    UART0_RIS    = (UART0_BASE + 0x3C),
-    UART0_MIS    = (UART0_BASE + 0x40),
-    UART0_ICR    = (UART0_BASE + 0x44),
-    UART0_DMACR  = (UART0_BASE + 0x48),
-    UART0_ITCR   = (UART0_BASE + 0x80),
-    UART0_ITIP   = (UART0_BASE + 0x84),
-    UART0_ITOP   = (UART0_BASE + 0x88),
-    UART0_TDR    = (UART0_BASE + 0x8C),
-};
+// The base address for UART.
+unsigned int	UART0_BASE;
+unsigned int	UART0_DR;
+unsigned int    UART0_RSRECR;
+unsigned int    UART0_FR;
+unsigned int    UART0_ILPR;
+unsigned int    UART0_IBRD;
+unsigned int    UART0_FBRD;
+unsigned int    UART0_LCRH;
+unsigned int    UART0_CR;
+unsigned int    UART0_IFLS;
+unsigned int    UART0_IMSC;
+unsigned int    UART0_RIS;
+unsigned int    UART0_MIS;
+unsigned int    UART0_ICR;
+unsigned int    UART0_DMACR;
+unsigned int    UART0_ITCR;
+unsigned int    UART0_ITIP;
+unsigned int    UART0_ITOP;
+unsigned int    UART0_TDR;
 
 void uart_init();
 
