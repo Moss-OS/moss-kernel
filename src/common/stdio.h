@@ -1,8 +1,10 @@
 #ifndef _STDIO_H
 #define _STDIO_H
 
+#include "printf.h"
+
 char getc(void);
-void putc(char c);
+void putc(void *p, char c);
 
 void puts(const char * s);
 
