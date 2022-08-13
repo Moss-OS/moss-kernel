@@ -6,14 +6,14 @@ char getc() {
     return uart_recv();
 }
 
-void putc(char c) {
+void putc(__attribute__((unused))void *p, char c) {
     uart_send(c);
 }
 
 void puts(const char * str) {
     int i;
     for (i = 0; str[i] != '\0'; i ++)
-        putc(str[i]);
+        putc(NULL, str[i]);
 }
 
 void gets(char * buf, int buflen) {
@@ -21,11 +21,11 @@ void gets(char * buf, int buflen) {
     char c;
     // Leave a spot for null char in buffer
     for (i = 0; (c = getc()) != '\r' && buflen > 1; i++, buflen--) {
-        putc(c);
+        putc(NULL, c);
         buf[i] = c;
     }
 
-    putc('\n');
+    putc(NULL, '\n');
     if (c == '\n') {
         buf[i] = '\0';
     }
