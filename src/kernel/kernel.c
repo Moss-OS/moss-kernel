@@ -1,5 +1,6 @@
 #include "../peripherals/uart.h"
 #include "../common/utils.h"
+#include "../common/stdio.h"
 
 static unsigned int current_processor_index = 0;
 
@@ -8,6 +9,8 @@ void kernel_main(unsigned long processor_index)
 
 	if (processor_index == 0) {
 		uart_init();
+		init_printf(NULL, putc);
+		printf("TESTING %d woohoo\n", 1);
 
 		switch (get_raspi_ver()) {
 			case RASPI3:
