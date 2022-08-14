@@ -10,7 +10,6 @@ void kernel_main(unsigned long processor_index)
 	if (processor_index == 0) {
 		uart_init();
 		init_printf(NULL, putc);
-		printf("TESTING %d woohoo\n", 1);
 
 		switch (get_raspi_ver()) {
 			case RASPI3:
@@ -24,6 +23,9 @@ void kernel_main(unsigned long processor_index)
 			default:
 				uart_send_string("I don't know what we are!?!?!?\r\n");
 		}
+
+		int el = get_el();
+    	printf("Exception level: %d \r\n", el);
 	}
 
 	while (processor_index != current_processor_index) { }
