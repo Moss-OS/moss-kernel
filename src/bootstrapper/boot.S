@@ -3,30 +3,29 @@
  * For multi core on raspi4 see: https://github.com/szediwy/raspberry-pi-os/commit/f601eb8b88a97aaaa92be90f7c01272541367fac
  */
 #include "mm.h"
+#include "sysregs.h"
 
-.section	".text.boot"
+.section ".text.boot"
 
 .global _start
 _start:
 	mrs		x0, mpidr_el1
-	and		x0, x0, #0xFF				// Check core id
+	and		x0, x0, #0xFF					// Check core id
 	cbz		x0, init_bss
-	wfe									// If not core 0 wait for sev instruction
+	wfe										// If not core 0 wait for sev instruction
 	b		master
 
 proc_hang:
 	b 		proc_hang
 
 init_bss:
-	adr		x0, __bss_start 			// Init bss
+	adr		x0, __bss_start 				// Init bss
 	adr		x1, __bss_end
 	sub		x1, x1, x0
 	bl		memzero
 
-	// Setup and wake cores
-	sev
+	sev 									// 	Enable the other cores see: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/arm64/booting.rst?h=v5.3#n255
 
-	// 	Enable the other cores see: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/arm64/booting.rst?h=v5.3#n255
 	mov 	x0, #0
 	adr		x0, master
 
@@ -37,14 +36,32 @@ init_bss:
 	mov 	x1, #0xF0
 	str 	x0, [x1]
 
-master:
-	mrs	x0, mpidr_el1
-	and	x0, x0, #0xFF					// Get core id
+master: 									// Setup EL https://github.com/s-matyukevich/raspberry-pi-os/blob/master/docs/lesson02/rpi-os.md
+	ldr		x0, =SCTLR_VALUE_MMU_DISABLED	// Config el1 see sysregs.h - currently little endian, diable instruction and data cache, disable MMU
+	msr		sctlr_el1, x0
 
-	mov	x1, #SECTION_SIZE
-	mul	x1, x1, x0						// Calculate SP for core
-	add	x1, x1, #LOW_MEMORY
-	mov	sp, x1							// Setup SP
+	ldr		x0, =HCR_VALUE					// Config el2 (hypervisor) see sysregs.h - Set AArch64
+	msr		hcr_el2, x0
 
-	bl	kernel_main
-	b 	proc_hang
+	//ldr	x0, =SCR_VALUE
+	//msr	scr_el3, x0						// Qemu starts in el2 so this won't work https://github.com/s-matyukevich/raspberry-pi-os/issues/207
+
+	ldr		x0, =SPSR_VALUE
+	msr		spsr_el2, x0					// Qemu = el2
+
+	adr		x0, enter_el1					// Boot will continue with init_ss at el1
+	msr		elr_el2, x0						// Qemu = el2
+
+	eret
+
+
+enter_el1:
+	mrs		x0, mpidr_el1
+	and		x0, x0, #0xFF					// Get core id
+	mov		x1, #SECTION_SIZE
+	mul		x1, x1, x0						// Calculate SP for core
+	add		x1, x1, #LOW_MEMORY
+	mov		sp, x1							// Setup SP
+
+	bl		kernel_main
+	b 		proc_hang
