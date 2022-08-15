@@ -36,24 +36,20 @@ init_bss:
 	mov 	x1, #0xF0
 	str 	x0, [x1]
 
-master: 									// Setup EL https://github.com/s-matyukevich/raspberry-pi-os/blob/master/docs/lesson02/rpi-os.md
-	ldr		x0, =SCTLR_VALUE_MMU_DISABLED	// Config el1 see sysregs.h - currently little endian, diable instruction and data cache, disable MMU
+master:  									// Setup EL https://github.com/s-matyukevich/raspberry-pi-os/blob/master/docs/lesson02/rpi-os.md
+	ldr		x0, =SCTLR_VALUE_MMU_DISABLED	// Config el1 little endian, diable instruction and data cache, disable MMU
 	msr		sctlr_el1, x0
 
-	ldr		x0, =HCR_VALUE					// Config el2 (hypervisor) see sysregs.h - Set AArch64
+	ldr		x0, =HCR_VALUE					// Config el2 (hypervisor) to AArch64
 	msr		hcr_el2, x0
 
-	//ldr	x0, =SCR_VALUE
-	//msr	scr_el3, x0						// Qemu starts in el2 so this won't work https://github.com/s-matyukevich/raspberry-pi-os/issues/207
-
-	ldr		x0, =SPSR_VALUE
-	msr		spsr_el2, x0					// Qemu = el2
+	ldr		x0, =SPSR_VALUE					// Mask interrupts and set EL1 SP
+	msr		spsr_el2, x0
 
 	adr		x0, enter_el1					// Boot will continue with init_ss at el1
-	msr		elr_el2, x0						// Qemu = el2
+	msr		elr_el2, x0
 
 	eret
-
 
 enter_el1:
 	mrs		x0, mpidr_el1
