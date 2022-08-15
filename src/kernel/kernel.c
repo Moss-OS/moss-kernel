@@ -10,30 +10,23 @@ void kernel_main(unsigned long processor_index)
 	if (processor_index == 0) {
 		uart_init();
 		init_printf(NULL, putc);
-		printf("MossOS initializing...\n");
 
-		switch (get_raspi_ver()) {
-			case RASPI3:
-				uart_send_string("We're a raspi3\r\n");
-				break;
+		printf("\n", NULL);
+		printf("~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~\r\n", NULL);
+		printf("                    Welcome to MossOS!!!\r\n", NULL);
+		printf("~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~\r\n", NULL);
+		printf("\n", NULL);
 
-			case RASPI4:
-				uart_send_string("We're a raspi4\r\n");
-				break;
-
-			default:
-				uart_send_string("I don't know what we are!?!?!?\r\n");
-		}
-
+		printf("Moss kernal initializing...\r\n", NULL);
+		printf("Raspi version: %d\r\n", get_raspi_ver());
+		printf("Exception level: %d \r\n", get_el());
+		printf("\n", NULL);
 	}
 
 	while (processor_index != current_processor_index) { }
 
-	uart_send_string("Hello from processor ");
-	uart_send(processor_index + '0');
-	uart_send_string("!\r\n");
-	int el = get_el();
-   	printf("Exception level: %d \r\n", el);
+	printf("Hello from processor %d! ", processor_index);
+	printf("My el is %d. \r\n", get_el());
 
 	// Tell the next core to go
 	current_processor_index++;
