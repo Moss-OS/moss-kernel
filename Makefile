@@ -7,7 +7,7 @@ LDFLAGS = -nostdlib -nostartfiles
 
 # Machine and emulator targets
 CPU = cortex-a53
-QEMU_COMMAND = ~/Code/ThirdParty/qemu-patch-raspberry4/build/qemu-system-aarch64
+QEMU_COMMAND = qemu-system-aarch64
 
 # Source directories (add additional subdirectories here)
 SRC_DIRS  = src/bootstrapper
@@ -58,3 +58,11 @@ clean:
 emu: build
 	@echo "==>" starting emulator
 	$(QEMU_COMMAND) -m 1024 -machine type=raspi3b -serial stdio -kernel $(IMG_NAME)
+
+deploy: build
+	@echo "==>" copying to SD card
+	cp -f ./build/kernel8.img /Volumes/boot/
+	cp -f ./build/config.txt /Volumes/boot/
+	sync
+	diskutil unmount /Volumes/boot/
+	@echo "==>" SD card ready
