@@ -1,6 +1,8 @@
 #include "../peripherals/uart.h"
 #include "../common/utils.h"
 #include "../common/stdio.h"
+#include "../peripherals/timer.h"
+#include "../peripherals/irq.h"
 
 static unsigned int current_processor_index = 0;
 
@@ -35,6 +37,12 @@ void kernel_main(unsigned long processor_index)
 	if (processor_index == 0) {
 		// if current_processor_index == 4 then all processors are done
 		while (current_processor_index != 4) { }
+
+		// Test interrupts by running a system timer
+		irq_vector_init();
+		timer_init();
+		enable_interrupt_controller();
+		enable_irq();
 
 		while (1) {
 			uart_send(uart_recv());
