@@ -6,7 +6,6 @@ ASMFLAGS =
 LDFLAGS = -nostdlib -nostartfiles
 
 # Machine and emulator targets
-PLATFORM ?= raspi4 # Add PLATFORM="raspi3" to override, don't forget to make clean
 CPU = cortex-a53
 QEMU_COMMAND = ~/Code/ThirdParty/qemu-patch-raspberry4/build/qemu-system-aarch64
 
@@ -58,8 +57,4 @@ clean:
 
 emu: build
 	@echo "==>" starting emulator
-    ifeq ("$(PLATFORM)","raspi3")
-		$(QEMU_COMMAND) -m 1024 -machine type=raspi3b -serial stdio -kernel $(IMG_NAME)
-    else
-		$(QEMU_COMMAND) -m 2048 -machine type=raspi4b2g -serial stdio -kernel $(IMG_NAME)
-    endif
+	$(QEMU_COMMAND) -m 1024 -machine type=raspi3b -serial stdio -kernel $(IMG_NAME)
