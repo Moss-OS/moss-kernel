@@ -1,7 +1,7 @@
 #ifndef _STDIO_H
 #define _STDIO_H
 
-#include "printf.h"
+#include "common/printf.h"
 
 char getc(void);
 void putc(void *p, char c);

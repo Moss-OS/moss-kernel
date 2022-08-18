@@ -1,8 +1,8 @@
-#include "../common/utils.h"
-#include "../common/printf.h"
-#include "timer.h"
-#include "../kernel/entry.h"
-#include "irq.h"
+#include "common/utils.h"
+#include "common/printf.h"
+#include "peripherals/timer.h"
+#include "kernel/entry.h"
+#include "peripherals/irq.h"
 
 const char *entry_error_messages[] = {
 	"SYNC_INVALID_EL1t",

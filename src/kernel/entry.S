@@ -1,4 +1,4 @@
-#include "entry.h"
+#include "kernel/entry.h"
 
 .macro handle_invalid_entry type
 	kernel_entry

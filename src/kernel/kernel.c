@@ -1,8 +1,8 @@
-#include "../peripherals/uart.h"
-#include "../common/utils.h"
-#include "../common/stdio.h"
-#include "../peripherals/timer.h"
-#include "../peripherals/irq.h"
+#include "peripherals/uart.h"
+#include "common/utils.h"
+#include "stdio.h"
+#include "peripherals/timer.h"
+#include "peripherals/irq.h"
 
 static unsigned int current_processor_index = 0;
 

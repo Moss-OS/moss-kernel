@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "common/utils.h"
 
 int get_raspi_ver (void) {
 	unsigned int cpu_id = get_core_info();

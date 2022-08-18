@@ -1,6 +1,6 @@
-#include "../common/utils.h"
-#include "../common/printf.h"
-#include "timer.h"
+#include "common/utils.h"
+#include "common/printf.h"
+#include "peripherals/timer.h"
 
 const unsigned int interval = 200000;
 unsigned int curVal = 0;

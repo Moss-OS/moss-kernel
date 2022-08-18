@@ -1,8 +1,8 @@
 # Compiler flags
 AARCH64_TOOLCHAIN_DIR = build/aarch64-unknown-linux-gnu
 ARMGNU = $(AARCH64_TOOLCHAIN_DIR)/bin/aarch64-unknown-linux-gnu
-CFLAGS = -Wall -Wextra -ffreestanding -mgeneral-regs-only -mcpu=$(CPU)
-ASMFLAGS =
+CFLAGS = -Iinclude -Wall -Wextra -ffreestanding -mgeneral-regs-only -mcpu=$(CPU)
+ASMFLAGS = -Iinclude
 LDFLAGS = -nostdlib -nostartfiles
 
 # Machine and emulator targets
@@ -26,7 +26,7 @@ IMG_NAME = $(BUILD_DIR)/$(IMAGE).img
 # Setup derived variables
 VPATH := src
 $(foreach dir,$(SRC_DIRS),$(eval VPATH := $(VPATH):$(dir)))
-$(foreach dir,$(SRC_DIRS),$(eval INCLUDES := $(INCLUDES) -I $(dir)))
+#$(foreach dir,$(SRC_DIRS),$(eval INCLUDES := $(INCLUDES) -I $(dir)))
 SOURCES = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c))
 ASM_SOURCES = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.S))
 OBJECTS := $(patsubst %.c, $(OBJ_DIR)/%_c.o, $(notdir $(SOURCES)))
@@ -42,12 +42,12 @@ build: $(OBJECTS) $(HEADERS)
 $(OBJ_DIR)/%_c.o: %.c
 	@echo "==>" compiling $<
 	@mkdir -p $(@D)
-	$(ARMGNU)-gcc $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(ARMGNU)-gcc $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%_s.o: %.S
 	@echo "==>" building $<
 	@mkdir -p $(@D)
-	$(ARMGNU)-gcc $(ASMFLAGS) $(INCLUDES) -c $< -o $@
+	$(ARMGNU)-gcc $(ASMFLAGS) -c $< -o $@
 
 clean:
 	@echo "==>" removing assets
