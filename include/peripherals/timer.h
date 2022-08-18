@@ -1,14 +1,13 @@
 #pragma once
 
-unsigned int TIMER_BASE;
 
-unsigned int TIMER_CS;
-unsigned int TIMER_CLO;
-unsigned int TIMER_CHI;
-unsigned int TIMER_C0;
-unsigned int TIMER_C1;
-unsigned int TIMER_C2;
-unsigned int TIMER_C3;
+struct {
+	unsigned int base;
+	unsigned int control_status;
+	unsigned int counter_low;
+	unsigned int counter_high;
+	unsigned int compare[4];
+} timer_regs;
 
 #define TIMER_CS_M0	(1 << 0)
 #define TIMER_CS_M1	(1 << 1)

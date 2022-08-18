@@ -22,11 +22,15 @@
 #define GICC_EOIR (GICC_CPU_BASE+0x00000010)
 #define GIC_IRQ_TARGET_BASE (GICD_DIST_BASE+0x00000800)
 
-// Timer interrupts
-unsigned int SYSTEM_TIMER_IRQ_0;
-unsigned int SYSTEM_TIMER_IRQ_1;
-unsigned int SYSTEM_TIMER_IRQ_2;
-unsigned int SYSTEM_TIMER_IRQ_3;
+struct {
+	// Timer interrupts
+	struct {
+		unsigned int irq0;
+		unsigned int irq1;
+		unsigned int irq2;
+		unsigned int irq3;
+	} system_timer;
+} irqs;
 
 // Functions
 void enable_interrupt_controller( void );

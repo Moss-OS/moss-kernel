@@ -3,36 +3,39 @@
 #include <stddef.h>
 #include <stdint.h>
 
-// The GPIO registers base address.
-unsigned int	GPIO_BASE;
-
 // GPIO
-unsigned int	GPFSEL1;
-unsigned int	GPSET0;
-unsigned int	GPCLR0;
-unsigned int	GPPUD;
-unsigned int	GPPUDCLK0;
+struct {
+	// The GPIO registers base address.
+	unsigned int	base;
+	unsigned int	gpfsel1;
+	unsigned int	gpset0;
+	unsigned int	gpclr0;
+	unsigned int	gppud;
+	unsigned int	gppudclk0;
+} gpio_regs;
 
-// The base address for UART.
-unsigned int	UART0_BASE;
-unsigned int	UART0_DR;
-unsigned int    UART0_RSRECR;
-unsigned int    UART0_FR;
-unsigned int    UART0_ILPR;
-unsigned int    UART0_IBRD;
-unsigned int    UART0_FBRD;
-unsigned int    UART0_LCRH;
-unsigned int    UART0_CR;
-unsigned int    UART0_IFLS;
-unsigned int    UART0_IMSC;
-unsigned int    UART0_RIS;
-unsigned int    UART0_MIS;
-unsigned int    UART0_ICR;
-unsigned int    UART0_DMACR;
-unsigned int    UART0_ITCR;
-unsigned int    UART0_ITIP;
-unsigned int    UART0_ITOP;
-unsigned int    UART0_TDR;
+struct {
+	// The base address for UART.
+	unsigned int	base;
+	unsigned int	dr;
+	unsigned int    rsrecr;
+	unsigned int    fr;
+	unsigned int    ilpr;
+	unsigned int    ibrd;
+	unsigned int    fbrd;
+	unsigned int    lcrh;
+	unsigned int    cr;
+	unsigned int    ifls;
+	unsigned int    imsc;
+	unsigned int    ris;
+	unsigned int    mis;
+	unsigned int    icr;
+	unsigned int    dmacr;
+	unsigned int    itcr;
+	unsigned int    itip;
+	unsigned int    itop;
+	unsigned int    tdr;
+} uart0_regs;
 
 void uart_init();
 

@@ -47,23 +47,23 @@ void enable_interrupt_controller()
 {
 	switch (pi_ver) {
 		case 3:
-			SYSTEM_TIMER_IRQ_0 = (1 << 0);
-			SYSTEM_TIMER_IRQ_1 = (1 << 1);
-			SYSTEM_TIMER_IRQ_2 = (1 << 2);
-			SYSTEM_TIMER_IRQ_3 = (1 << 3);
+			irqs.system_timer.irq0 = (1 << 0);
+			irqs.system_timer.irq1 = (1 << 1);
+			irqs.system_timer.irq2 = (1 << 2);
+			irqs.system_timer.irq3 = (1 << 3);
 
-			printf("Enabling interrupt %x\r\n", SYSTEM_TIMER_IRQ_1);
-			put32(ENABLE_IRQS_1, SYSTEM_TIMER_IRQ_1);
+			printf("Enabling interrupt %x\r\n", irqs.system_timer.irq1);
+			put32(ENABLE_IRQS_1, irqs.system_timer.irq1);
 			break;
 
 		case 4:
-		 	SYSTEM_TIMER_IRQ_0 = (0x60); //96
-			SYSTEM_TIMER_IRQ_1 = (0x61); //97
-			SYSTEM_TIMER_IRQ_2 = (0x62); //98
-			SYSTEM_TIMER_IRQ_3 = (0x63); //99
+		 	irqs.system_timer.irq0 = (0x60); //96
+			irqs.system_timer.irq1 = (0x61); //97
+			irqs.system_timer.irq2 = (0x62); //98
+			irqs.system_timer.irq3 = (0x63); //99
 
-			assign_target(SYSTEM_TIMER_IRQ_1, 0);
-			enable_interrupt(SYSTEM_TIMER_IRQ_1);
+			assign_target(irqs.system_timer.irq1, 0);
+			enable_interrupt(irqs.system_timer.irq1);
 			break;
 	}
 }
@@ -95,7 +95,7 @@ void handle_irq(void)
 	}
 	printf("Got pending irq: %x\r\n", irq);
 
-	if (irq == SYSTEM_TIMER_IRQ_1) {
+	if (irq == irqs.system_timer.irq1) {
 		if (pi_ver == 4) {
 			put32(GICC_EOIR, irq_ack_reg);
 		}
