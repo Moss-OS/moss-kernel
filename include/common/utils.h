@@ -1,5 +1,5 @@
-#ifndef	_UTILS_H
-#define	_UTILS_H
+#pragma once
+
 #include <stdint.h>
 
 #ifndef __ASSEMBLER__
@@ -21,5 +21,3 @@ enum {
 };
 
 int get_raspi_ver ( void );
-
-#endif  /*_UTILS_H */

@@ -1,5 +1,5 @@
-#ifndef	_UART_H
-#define	_UART_H
+#pragma once
+
 #include <stddef.h>
 #include <stdint.h>
 
@@ -40,5 +40,3 @@ void uart_send(unsigned char c);
 unsigned char uart_recv();
 
 void uart_send_string(const char* str);
-
-#endif  /*_UART_H */

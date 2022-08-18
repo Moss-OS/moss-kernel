@@ -1,5 +1,4 @@
-#ifndef	_IRQ_H
-#define	_IRQ_H
+#pragma once
 
 // Raspi3
 #define IRQ_BASE 0x3F000000
@@ -35,5 +34,3 @@ void enable_interrupt_controller( void );
 void irq_vector_init( void );
 void enable_irq( void );
 void disable_irq( void );
-
-#endif  /*_IRQ_H */
