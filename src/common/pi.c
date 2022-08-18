@@ -1,12 +1,13 @@
 #include "common/utils.h"
+#include "common/pi.h"
 
-int get_raspi_ver (void) {
+int set_pi_ver (void) {
 	unsigned int cpu_id = get_core_info();
 	if (cpu_id == 0x410FD034) {
-		return RASPI3;   // raspi2 & 3
+		return 3;   // pi2 & 3
 	} else if (cpu_id == 0x410FD083) {
-		return RASPI4;   // raspi4
+		return 4;   // pi4
 	} else {
-		return 0;// Unknown
+		return 0;	// unknown
 	}
 }

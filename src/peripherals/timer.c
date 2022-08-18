@@ -1,4 +1,5 @@
 #include "common/utils.h"
+#include "common/pi.h"
 #include "common/printf.h"
 #include "peripherals/timer.h"
 
@@ -7,16 +8,13 @@ unsigned int curVal = 0;
 
 void timer_init ( void )
 {
-	switch (get_raspi_ver()) {
-		case (RASPI3):
+	switch (pi_ver) {
+		case 3:
 			TIMER_BASE = 0x3F000000;
 			break;
-		case (RASPI4):
+		case 4:
 			TIMER_BASE = 0xFE000000;
 			break;
-		default:
-			return;
-			// die?
 	}
 	TIMER_CS = (TIMER_BASE+0x00003000);
 	TIMER_CLO = (TIMER_BASE+0x00003004);

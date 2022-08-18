@@ -1,5 +1,6 @@
 #include "peripherals/uart.h"
 #include "common/utils.h"
+#include "common/pi.h"
 #include "stdio.h"
 #include "peripherals/timer.h"
 #include "peripherals/irq.h"
@@ -10,6 +11,7 @@ void kernel_main(unsigned long processor_index)
 {
 
 	if (processor_index == 0) {
+		pi_ver = set_pi_ver();
 		uart_init();
 		init_printf(NULL, putc);
 
@@ -20,7 +22,7 @@ void kernel_main(unsigned long processor_index)
 		printf("\n", NULL);
 
 		printf("Moss kernal initializing...\r\n", NULL);
-		printf("Raspi version: %d\r\n", get_raspi_ver());
+		printf("Raspberry Pi version: %d\r\n", pi_ver);
 		printf("Exception level: %d \r\n", get_el());
 		printf("\n", NULL);
 	}

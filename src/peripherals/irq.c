@@ -1,4 +1,5 @@
 #include "common/utils.h"
+#include "common/pi.h"
 #include "common/printf.h"
 #include "peripherals/timer.h"
 #include "kernel/entry.h"
@@ -44,8 +45,8 @@ void assign_target(unsigned int irq, __attribute__((unused))unsigned int cpu) {
 
 void enable_interrupt_controller()
 {
-	switch (get_raspi_ver()) {
-		case RASPI3:
+	switch (pi_ver) {
+		case 3:
 			SYSTEM_TIMER_IRQ_0 = (1 << 0);
 			SYSTEM_TIMER_IRQ_1 = (1 << 1);
 			SYSTEM_TIMER_IRQ_2 = (1 << 2);
@@ -55,7 +56,7 @@ void enable_interrupt_controller()
 			put32(ENABLE_IRQS_1, SYSTEM_TIMER_IRQ_1);
 			break;
 
-		case RASPI4:
+		case 4:
 		 	SYSTEM_TIMER_IRQ_0 = (0x60); //96
 			SYSTEM_TIMER_IRQ_1 = (0x61); //97
 			SYSTEM_TIMER_IRQ_2 = (0x62); //98
@@ -64,10 +65,6 @@ void enable_interrupt_controller()
 			assign_target(SYSTEM_TIMER_IRQ_1, 0);
 			enable_interrupt(SYSTEM_TIMER_IRQ_1);
 			break;
-
-		default:
-			return;
-			// die?
 	}
 }
 
@@ -81,12 +78,12 @@ void handle_irq(void)
 	unsigned int irq;
 	unsigned int irq_ack_reg;
 
-	switch (get_raspi_ver()) {
-		case RASPI3:
+	switch (pi_ver) {
+		case 3:
 			irq = get32(IRQ_PENDING_1);
 			break;
 
-		case RASPI4:
+		case 4:
 			//irq = get32(IRQ_BASIC_PENDING);
 			irq_ack_reg = get32(GICC_IAR);
 			irq = irq_ack_reg & 0x2FF;
@@ -99,8 +96,9 @@ void handle_irq(void)
 	printf("Got pending irq: %x\r\n", irq);
 
 	if (irq == SYSTEM_TIMER_IRQ_1) {
-		if (get_raspi_ver() == RASPI4)
+		if (pi_ver == 4) {
 			put32(GICC_EOIR, irq_ack_reg);
+		}
 		handle_timer_irq();
 	} else {
 		printf("Unknown pending irq: %x\r\n", irq);

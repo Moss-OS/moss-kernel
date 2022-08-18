@@ -1,20 +1,17 @@
 #include "peripherals/uart.h"
 #include "common/utils.h"
+#include "common/pi.h"
 
 void uart_init (void)
 {
-	switch (get_raspi_ver()) {
-		case RASPI3:
-			GPIO_BASE = 0x3f200000;   // raspi2 & 3
+	switch (pi_ver) {
+		case 3:
+			GPIO_BASE = 0x3f200000;   // pi2 & 3
 			break;
 
-		case RASPI4:
-			GPIO_BASE = 0xFE200000;   // raspi4
+		case 4:
+			GPIO_BASE = 0xFE200000;   // pi4
 			break;
-
-		default:
-			return;
-			// die?
 	}
 
 	// GPIO

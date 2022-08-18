@@ -1,6 +1,6 @@
 /*
  * Bootstrapper. For details see: https://jsandler18.github.io/explanations/boot_S.html
- * For multi core on raspi4 see: https://github.com/szediwy/raspberry-pi-os/commit/f601eb8b88a97aaaa92be90f7c01272541367fac
+ * For multi core on Pi4 see: https://github.com/szediwy/raspberry-pi-os/commit/f601eb8b88a97aaaa92be90f7c01272541367fac
  */
 #include "bootstrapper/mm.h"
 #include "bootstrapper/sysregs.h"

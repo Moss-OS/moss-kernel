@@ -1,6 +1,6 @@
 #pragma once
 
-// Raspi3
+// Pi3
 #define IRQ_BASE 0x3F000000
 #define IRQ_BASIC_PENDING	(IRQ_BASE+0x0000B200)
 #define IRQ_PENDING_1		(IRQ_BASE+0x0000B204)
@@ -13,7 +13,7 @@
 #define DISABLE_IRQS_2		(IRQ_BASE+0x0000B220)
 #define DISABLE_BASIC_IRQS	(IRQ_BASE+0x0000B224)
 
-// Raspi4 https://github.com/s-matyukevich/raspberry-pi-os/issues/237
+// Pi4 https://github.com/s-matyukevich/raspberry-pi-os/issues/237
 #define GIC_BASE 0xFF840000
 #define GICD_DIST_BASE (GIC_BASE+0x00001000)
 #define GICC_CPU_BASE (GIC_BASE+0x00002000)
