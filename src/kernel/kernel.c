@@ -21,7 +21,7 @@ void kernel_main(unsigned long processor_index)
 		printf("~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~\r\n", NULL);
 		printf("\n", NULL);
 
-		printf("Moss kernal initializing...\r\n", NULL);
+		printf("Moss kernel initializing...\r\n", NULL);
 		printf("Raspberry Pi version: %d\r\n", pi_ver);
 		printf("Exception level: %d \r\n", get_el());
 		printf("\n", NULL);
