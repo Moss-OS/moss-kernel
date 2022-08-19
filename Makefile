@@ -26,12 +26,10 @@ IMG_NAME = $(BUILD_DIR)/$(IMAGE).img
 # Setup derived variables
 VPATH := src
 $(foreach dir,$(SRC_DIRS),$(eval VPATH := $(VPATH):$(dir)))
-#$(foreach dir,$(SRC_DIRS),$(eval INCLUDES := $(INCLUDES) -I $(dir)))
 SOURCES = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c))
 ASM_SOURCES = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.S))
 OBJECTS := $(patsubst %.c, $(OBJ_DIR)/%_c.o, $(notdir $(SOURCES)))
 OBJECTS += $(patsubst %.S, $(OBJ_DIR)/%_s.o, $(notdir $(ASM_SOURCES)))
-HEADERS = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.h))
 
 # Targets
 build: $(OBJECTS) $(HEADERS)
