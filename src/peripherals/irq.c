@@ -5,7 +5,7 @@
 #include "kernel/entry.h"
 #include "peripherals/irq.h"
 
-const char *entry_error_messages[] = {
+const char entry_error_messages[16][32] = {
 	"SYNC_INVALID_EL1t",
 	"IRQ_INVALID_EL1t",
 	"FIQ_INVALID_EL1t",
@@ -70,7 +70,7 @@ void enable_interrupt_controller()
 
 void show_invalid_entry_message(int type, unsigned long esr, unsigned long address)
 {
-	printf("%s, %d, ESR: %x, address: %x\r\n", entry_error_messages[type], type, esr, address);
+	printf("%s (type %d), ESR: %x, address: %x\r\n", entry_error_messages[type], type, esr, address);
 }
 
 void handle_irq(void)
@@ -88,12 +88,8 @@ void handle_irq(void)
 			irq_ack_reg = get32(GICC_IAR);
 			irq = irq_ack_reg & 0x2FF;
 			break;
-
-		default:
-			return;
-			// die?
 	}
-	printf("Got pending irq: %x\r\n", irq);
+	printf("Got pending interrupt: %x\r\n", irq);
 
 	if (irq == irqs.system_timer.irq1) {
 		if (pi_ver == 4) {
@@ -101,6 +97,6 @@ void handle_irq(void)
 		}
 		handle_timer_irq();
 	} else {
-		printf("Unknown pending irq: %x\r\n", irq);
+		printf("WARNING: unhandled interrupt: %x\r\n", irq);
 	}
 }
