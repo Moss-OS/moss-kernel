@@ -2,6 +2,7 @@
 #include "common/pi.h"
 #include "common/printf.h"
 #include "peripherals/timer.h"
+#include "process/sched.h"
 
 const unsigned int interval = 200000;
 unsigned int curVal = 0;
@@ -35,4 +36,5 @@ void handle_timer_irq( void )
 	put32(timer_regs.compare[1], curVal);
 	put32(timer_regs.control_status, TIMER_CS_M1);
 	printf("Timer interrupt received\n\r");
+	timer_tick();
 }
