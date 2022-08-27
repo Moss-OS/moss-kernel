@@ -76,6 +76,12 @@ void kernel_main(unsigned long processor_index)
 			printf("Error while starting process 2\r\n");
 			return;
 		}
+		printf("Starting process 3\r\n");
+		res = copy_process((unsigned long)&process, (unsigned long)"qwerty");
+		if (res != 0) {
+			printf("Error while starting process 2\r\n");
+			return;
+		}
 
 		printf("Entering kernel loop\r\n");
 
