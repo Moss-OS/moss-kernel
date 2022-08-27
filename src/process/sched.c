@@ -28,7 +28,7 @@ void preempt_enable(void)
 
 void _schedule(void)
 {
-	printf("in _schedule\r\n");
+	//printf("in _schedule\r\n");
 	//print_task_info(current);
 	preempt_disable();
 	int next,c;
@@ -52,22 +52,28 @@ void _schedule(void)
 		if (c) {
 			break;
 		}
+		for (int i = 0; i < NR_TASKS; i++) {
+            p = task[i];
+            if (p) {
+                p->counter = (p->counter >> 1) + p->priority;
+            }
+        }
 	}
-	printf("Attempting to switch to task %d\r\n", next);
+	//printf("Attempting to switch to task %d\r\n", next);
 	switch_to(task[next]);
 	preempt_enable();
 }
 
 void schedule(void)
 {
-	printf("in schedule\r\n", NULL);
+	//printf("in schedule\r\n", NULL);
 	current->counter = 0;
 	_schedule();
 }
 
 void switch_to(struct task_struct * next)
 {
-	printf("\n\rtask output: ");
+	//printf("task output: ");
 	if (current == next)
 		return;
 	struct task_struct * prev = current;
@@ -82,13 +88,13 @@ void schedule_tail(void) {
 
 void timer_tick()
 {
-	print_task_info(current);
+	//print_task_info(current);
 	--current->counter;
 	if (current->counter>0 || current->preempt_count >0) {
 		return;
 	}
 	current->counter=0;
-	print_task_info(current);
+	//print_task_info(current);
 	enable_irq();
 	_schedule();
 	disable_irq();

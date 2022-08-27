@@ -35,6 +35,6 @@ void handle_timer_irq( void )
 	curVal += interval;
 	put32(timer_regs.compare[1], curVal);
 	put32(timer_regs.control_status, TIMER_CS_M1);
-	printf("Timer interrupt received\n\r");
+	//printf("Timer interrupt received\n\r");
 	timer_tick();
 }

@@ -89,7 +89,7 @@ void handle_irq(void)
 			irq = irq_ack_reg & 0x2FF;
 			break;
 	}
-	printf("Got pending interrupt: %x\r\n", irq);
+	//printf("Got pending interrupt: %x\r\n", irq);
 
 	if (irq == irqs.system_timer.irq1) {
 		if (pi_ver == 4) {

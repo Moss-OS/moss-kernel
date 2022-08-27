@@ -80,7 +80,7 @@ void kernel_main(unsigned long processor_index)
 		printf("Entering kernel loop\r\n");
 
 		while (1) {
-			printf("in kernel loop\r\n");
+			//printf("in kernel loop\r\n");
 			schedule();
 		}
 	}
