@@ -25,7 +25,7 @@ void preempt_enable(void)
 	current->preempt_count--;
 }
 
-
+// See https://github.com/zavg/linux-0.01/blob/master/kernel/sched.c#L68
 void _schedule(void)
 {
 	//printf("in _schedule\r\n");
