@@ -65,13 +65,13 @@ void kernel_main(unsigned long processor_index)
 		printf("Kernel process %d\r\n", nr_tasks-1);
 		print_task_info(p);
 		printf("Starting process 1\r\n");
-		int res = copy_process((unsigned long)&process, (unsigned long)"12345", 1);
+		int res = copy_process((unsigned long)&process, (unsigned long)"12345");
 		if (res != 0) {
 			printf("Error while starting process 1\r\n");
 			return;
 		}
 		printf("Starting process 2\r\n");
-		res = copy_process((unsigned long)&process, (unsigned long)"abcde", 2);
+		res = copy_process((unsigned long)&process, (unsigned long)"abcde");
 		if (res != 0) {
 			printf("Error while starting process 2\r\n");
 			return;

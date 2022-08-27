@@ -1,3 +1,3 @@
 #pragma once
 
-int copy_process(unsigned long fn, unsigned long arg, int id);
+int copy_process(unsigned long fn, unsigned long arg);
