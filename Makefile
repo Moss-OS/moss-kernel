@@ -14,7 +14,7 @@ SRC_DIRS  = src/bootstrapper
 SRC_DIRS += src/kernel
 SRC_DIRS += src/peripherals
 SRC_DIRS += src/common
-SRC_DIRS += src/lib
+SRC_DIRS += src/process
 
 # Output directories
 BUILD_DIR = build
