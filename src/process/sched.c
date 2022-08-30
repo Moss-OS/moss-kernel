@@ -8,9 +8,7 @@ static struct task_struct init_task = INIT_TASK;
 void init_scheduler()
 {
 	current = &(init_task);
-	for (int i = 0; i < NR_TASKS; i++) {
-		task[i] = &(init_task);
-	}
+	task_list = &(init_task);
 	nr_tasks = 1;
 
 }
@@ -31,36 +29,34 @@ void _schedule(void)
 	//printf("in _schedule\r\n");
 	//print_task_info(current);
 	preempt_disable();
-	int next,c;
+	int c;
 	struct task_struct * p;
+	struct task_struct * next_task;
 	//printf("Entering _schedule loop\r\n");
 	while (1) {
 		//printf(".");
 		c = -1;
-		next = 0;
 	 	//printf("Entering _schedule first for\r\n");
-		for (int i = 0; i < nr_tasks; i++){
-			p = task[i];
+		for (p = task_list; p; p = p->next_task){
 			//print_task_info(p);
 			//printf("c = %d / next = %d\r\n", c, next);
 			if (p && p->state == TASK_RUNNING && p->counter > c) {
 	 			//printf("in _schedule first if\r\n");
 				c = p->counter;
-				next = i;
+				next_task = p;
 			}
 		}
 		if (c) {
 			break;
 		}
-		for (int i = 0; i < NR_TASKS; i++) {
-            p = task[i];
+		for (p = task_list; p; p = p->next_task) {
             if (p) {
                 p->counter = (p->counter >> 1) + p->priority;
             }
         }
 	}
 	//printf("Attempting to switch to task %d\r\n", next);
-	switch_to(task[next]);
+	switch_to(next_task);
 	preempt_enable();
 }
 

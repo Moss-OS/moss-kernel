@@ -7,6 +7,7 @@ int copy_process(unsigned long fn, unsigned long arg)
 {
 	preempt_disable();
 	struct task_struct *p;
+	struct task_struct *previous_task;
 
 	p = (struct task_struct *) get_free_page();
 	if (!p)
@@ -22,7 +23,11 @@ int copy_process(unsigned long fn, unsigned long arg)
 	p->cpu_context.sp = (unsigned long)p + THREAD_SIZE;
 	int pid = nr_tasks++;
 	p->id = pid;
-	task[pid] = p;	
+
+	p->next_task = 0;
+	previous_task = task_list;
+	while(previous_task->next_task) previous_task = previous_task->next_task;
+	previous_task->next_task = p;
 
 	printf("Struct task allocated at 0x%08X.\r\n", p);
 	print_task_info(p);
