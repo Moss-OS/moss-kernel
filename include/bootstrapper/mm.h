@@ -19,8 +19,8 @@
 #ifndef __ASSEMBLER__
 
 void init_mem_map();
-unsigned long get_free_page();
-void free_page(unsigned long p);
-void memzero(unsigned long src, unsigned long n);
+uint64_t get_free_page();
+void free_page(uint64_t p);
+void memzero(uint64_t src, uint64_t n);
 
 #endif

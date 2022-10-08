@@ -23,7 +23,7 @@ void init_mem_map()
 	}
 }
 
-unsigned long get_free_page()
+uint64_t get_free_page()
 {
 	int pages = PI3_PAGING_PAGES;
 	for (int i = 0; i < pages; i++){
@@ -35,6 +35,6 @@ unsigned long get_free_page()
 	return 0;
 }
 
-void free_page(unsigned long p){
+void free_page(uint64_t p){
 	mem_map[(p - LOW_MEMORY) / PAGE_SIZE] = 0;
 }

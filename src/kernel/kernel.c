@@ -41,7 +41,7 @@ void user_process() {
 		return;
 	}
 
-	int err = call_sys_clone((unsigned long)&user_process1, (unsigned long)"12345", stack);
+	int err = call_sys_clone((uint64_t)&user_process1, (uint64_t)"12345", stack);
 	if (err < 0){
 		printf("Error while clonning process 1\r\n");
 		return;
@@ -53,7 +53,7 @@ void user_process() {
 		return;
 	}
 
-	err = call_sys_clone((unsigned long)&user_process1, (unsigned long)"abcd", stack);
+	err = call_sys_clone((uint64_t)&user_process1, (uint64_t)"abcd", stack);
 	if (err < 0){
 		printf("Error while clonning process 2\r\n");
 		return;
@@ -65,7 +65,7 @@ void user_process() {
 void kernel_process() {
 	printf("Kernel process started. EL %d\r\n", get_el());
 
-	int err = move_to_user_mode((unsigned long)&user_process);
+	int err = move_to_user_mode((uint64_t)&user_process);
 	if (err < 0) {
 		printf("Error while moving process to user mode\r\n");
 	}
@@ -73,7 +73,7 @@ void kernel_process() {
 
 static uint32_t current_processor_index = 0;
 
-void kernel_main(unsigned long processor_index) {
+void kernel_main(uint64_t processor_index) {
 
 	if (processor_index == 0) {
 		pi_ver = set_pi_ver();
@@ -118,7 +118,7 @@ void kernel_main(unsigned long processor_index) {
 		printf("Kernel process %d\r\n", nr_tasks-1);
 		print_task_info(p);
 
-		int res = copy_process(PF_KTHREAD, (unsigned long)&kernel_process, 0, 0);
+		int res = copy_process(PF_KTHREAD, (uint64_t)&kernel_process, 0, 0);
 		if (res < 0) {
 			printf("error while starting kernel process");
 			return;
