@@ -1,19 +1,19 @@
 #include "bootstrapper/mm.h"
 #include "common/pi.h"
 
-unsigned short *mem_map;
+uint16_t *mem_map;
 
 void init_mem_map()
 {
 	int pages;
 	switch(pi_ver) {
 		case 3: ;
-			unsigned short mm3[PI3_PAGING_PAGES];
+			uint16_t mm3[PI3_PAGING_PAGES];
 			pages = PI3_PAGING_PAGES;
 			mem_map = mm3;
 			break;
 		case 4: ;
-			unsigned short mm4[PI4_PAGING_PAGES];
+			uint16_t mm4[PI4_PAGING_PAGES];
 			pages = PI4_PAGING_PAGES;
 			mem_map = mm4;
 			break;
