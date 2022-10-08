@@ -4,8 +4,9 @@
 #include "peripherals/timer.h"
 #include "kernel/entry.h"
 #include "peripherals/irq.h"
+#include <stdint.h>
 
-const char entry_error_messages[16][32] = {
+const char entry_error_messages[18][32] = {
 	"SYNC_INVALID_EL1t",
 	"IRQ_INVALID_EL1t",
 	"FIQ_INVALID_EL1t",
@@ -24,7 +25,10 @@ const char entry_error_messages[16][32] = {
 	"SYNC_INVALID_EL0_32",
 	"IRQ_INVALID_EL0_32",
 	"FIQ_INVALID_EL0_32",
-	"ERROR_INVALID_EL0_32"
+	"ERROR_INVALID_EL0_32",
+
+	"SYNC_ERROR",
+	"SYSCALL_ERROR"
 };
 
 void enable_interrupt(unsigned int irq) {
@@ -68,9 +72,8 @@ void enable_interrupt_controller()
 	}
 }
 
-void show_invalid_entry_message(int type, unsigned long esr, unsigned long address)
-{
-	printf("%s (type %d), ESR: %x, address: %x\r\n", entry_error_messages[type], type, esr, address);
+void show_invalid_entry_message(int type, uint64_t esr, uint64_t elr, uint64_t spsr, int el) {
+	printf("Invalid interrupt: %s (type %d), ESR: 0x%08x, ELR: 0x%016x, SPSR: 0x%08X, EL: %d\r\n", entry_error_messages[type], type, esr, elr, spsr, el);
 }
 
 void handle_irq(void)

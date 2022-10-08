@@ -1,8 +1,8 @@
 # Compiler flags
 AARCH64_TOOLCHAIN_DIR = build/aarch64-unknown-linux-gnu
 ARMGNU = $(AARCH64_TOOLCHAIN_DIR)/bin/aarch64-unknown-linux-gnu
-CFLAGS = -Iinclude -Wall -Wextra -ffreestanding -mgeneral-regs-only -mcpu=$(CPU)
-ASMFLAGS = -Iinclude
+CFLAGS = -Iinclude -Wall -Wextra -ffreestanding -mgeneral-regs-only -mcpu=$(CPU) -g
+ASMFLAGS = -Iinclude -g
 LDFLAGS = -nostdlib -nostartfiles
 
 # Machine and emulator targets
@@ -22,6 +22,7 @@ OBJ_DIR = $(BUILD_DIR)/obj
 IMAGE = kernel8
 BIN_NAME = $(BUILD_DIR)/$(IMAGE).elf
 IMG_NAME = $(BUILD_DIR)/$(IMAGE).img
+LST_NAME = $(BUILD_DIR)/$(IMAGE).lst
 
 # Setup derived variables
 VPATH := src
@@ -35,6 +36,7 @@ OBJECTS += $(patsubst %.S, $(OBJ_DIR)/%_s.o, $(notdir $(ASM_SOURCES)))
 build: $(OBJECTS) $(HEADERS)
 	@echo "==>" linking $(OBJECTS)
 	$(ARMGNU)-ld $(LDFLAGS) -T $(BUILD_DIR)/linker.ld -o $(BIN_NAME) $(OBJECTS)
+	$(ARMGNU)-objdump -D $(BIN_NAME) > $(LST_NAME)
 	$(ARMGNU)-objcopy $(BIN_NAME) -O binary $(IMG_NAME)
 
 $(OBJ_DIR)/%_c.o: %.c
@@ -52,10 +54,15 @@ clean:
 	rm -rf $(OBJ_DIR)
 	rm -f $(BIN_NAME)
 	rm -f $(IMG_NAME)
+	rm -f $(LST_NAME)
 
 emu: build
 	@echo "==>" starting emulator
 	$(QEMU_COMMAND) -m 1024 -machine type=raspi3b -serial stdio -kernel $(IMG_NAME)
+
+debug: build
+	@echo "==>" starting emulator
+	$(QEMU_COMMAND) -m 1024 -machine type=raspi3b -serial stdio -kernel $(IMG_NAME) -s -S
 
 deploy: build
 	@echo "==>" copying to SD card
