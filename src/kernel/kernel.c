@@ -11,15 +11,6 @@
 #include <stdint.h>
 
 void process(char *array) {
-	while (1) {
-		for (int i = 0; i < 5; i++) {
-			uart_send(array[i]);
-			delay(100000);
-		}
-	}
-}
-
-void user_process1(char *array) {
 	char buf[2] = {0};
 	while (1) {
 		for (int i = 0; i < 5; i++) {
@@ -32,7 +23,6 @@ void user_process1(char *array) {
 
 void user_process() {
 	char buf[30] = {0};
-
 	tfp_sprintf(buf, "User process started\r\n");
 	call_sys_write(buf);
 
@@ -42,7 +32,7 @@ void user_process() {
 		return;
 	}
 
-	int err = call_sys_clone((uint64_t)&user_process1, (uint64_t)"12345", stack);
+	int err = call_sys_clone((uint64_t)&process, (uint64_t)"12345", stack);
 	if (err < 0){
 		printf("Error while clonning process 1\r\n");
 		return;
@@ -54,7 +44,7 @@ void user_process() {
 		return;
 	}
 
-	err = call_sys_clone((uint64_t)&user_process1, (uint64_t)"abcd", stack);
+	err = call_sys_clone((uint64_t)&process, (uint64_t)"abcd", stack);
 	if (err < 0){
 		printf("Error while clonning process 2\r\n");
 		return;
@@ -121,7 +111,7 @@ void kernel_main(uint64_t processor_index) {
 
 		int res = copy_process(PF_KTHREAD, (uint64_t)&kernel_process, 0, 0);
 		if (res < 0) {
-			printf("error while starting kernel process");
+			printf("Error while starting kernel process\r\n");
 			return;
 		}
 
