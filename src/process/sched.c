@@ -2,30 +2,27 @@
 #include "process/sched.h"
 #include "peripherals/irq.h"
 #include "common/printf.h"
+#include "bootstrapper/mm.h"
 
 static struct task_struct init_task = INIT_TASK;
 
-void init_scheduler()
-{
+void init_scheduler() {
 	current = &(init_task);
 	task_list = &(init_task);
 	nr_tasks = 1;
 
 }
 
-void preempt_disable(void)
-{
+void preempt_disable(void) {
 	current->preempt_count++;
 }
 
-void preempt_enable(void)
-{
+void preempt_enable(void) {
 	current->preempt_count--;
 }
 
 // See https://github.com/zavg/linux-0.01/blob/master/kernel/sched.c#L68
-void _schedule(void)
-{
+void _schedule(void) {
 	//printf("in _schedule\r\n");
 	//print_task_info(current);
 	preempt_disable();
@@ -37,7 +34,7 @@ void _schedule(void)
 		//printf(".");
 		c = -1;
 	 	//printf("Entering _schedule first for\r\n");
-		for (p = task_list; p; p = p->next_task){
+		for (p = task_list; p; p = p->next_task) {
 			//print_task_info(p);
 			//printf("c = %d / next = %d\r\n", c, next);
 			if (p && p->state == TASK_RUNNING && p->counter > c) {
@@ -55,20 +52,18 @@ void _schedule(void)
             }
         }
 	}
-	//printf("Attempting to switch to task %d\r\n", next);
+	//printf("\r\nAttempting to switch to task %d\r\n", next_task->id);
 	switch_to(next_task);
 	preempt_enable();
 }
 
-void schedule(void)
-{
+void schedule(void) {
 	//printf("in schedule\r\n", NULL);
 	current->counter = 0;
 	_schedule();
 }
 
-void switch_to(struct task_struct * next)
-{
+void switch_to(struct task_struct * next) {
 	//printf("task output: ");
 	if (current == next)
 		return;
@@ -82,8 +77,7 @@ void schedule_tail(void) {
 }
 
 
-void timer_tick()
-{
+void timer_tick() {
 	//print_task_info(current);
 	--current->counter;
 	if (current->counter>0 || current->preempt_count >0) {
@@ -96,8 +90,23 @@ void timer_tick()
 	disable_irq();
 }
 
-void print_task_info(struct task_struct *p)
-{
+void exit_process() {
+	struct task_struct * p;
+	preempt_disable();
+	for (p = task_list; p; p = p->next_task) {
+		if (p == current) {
+			p->state = TASK_ZOMBIE;
+			break;
+		}
+	}
+	if (current->stack) {
+		free_page(current->stack);
+	}
+	preempt_enable();
+	schedule();
+}
+
+void print_task_info(struct task_struct *p) {
 	printf("Task id: %d - ", p->id);
 	printf("state: %d ", p->state);
 	printf("counter: %d ", p->counter);
