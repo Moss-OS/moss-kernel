@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "common/utils.h"
 #include "common/pi.h"
 #include "common/printf.h"

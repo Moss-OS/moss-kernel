@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "peripherals/uart.h"
 #include "common/utils.h"
 #include "common/pi.h"
@@ -78,11 +79,11 @@ void kernel_main(uint64_t processor_index) {
 	if (processor_index == 0) {
 		pi_ver = set_pi_ver();
 		uart_init();
-		init_printf(NULL, putc);
+		init_printf("", putc);
 
 		printf("\r\n");
 		printf("~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~\r\n");
-		printf("                    Welcome to MossOS!!!\r\n", NULL);
+		printf("                    Welcome to MossOS!!!\r\n");
 		printf("~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~\r\n");
 		printf("\r\n");
 		printf("Moss kernel initializing\r\n");

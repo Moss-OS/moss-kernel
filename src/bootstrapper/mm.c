@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "bootstrapper/mm.h"
 #include "common/pi.h"
 

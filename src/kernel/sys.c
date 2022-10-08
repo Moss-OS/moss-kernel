@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "process/fork.h"
 #include "common/printf.h"
 #include "common/utils.h"

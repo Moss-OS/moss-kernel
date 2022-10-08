@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "peripherals/uart.h"
 #include "common/utils.h"
 #include "common/pi.h"

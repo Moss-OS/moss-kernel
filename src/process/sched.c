@@ -1,4 +1,4 @@
-#include <stddef.h>
+#include <stdint.h>
 #include "process/sched.h"
 #include "peripherals/irq.h"
 #include "common/printf.h"
@@ -58,7 +58,7 @@ void _schedule(void) {
 }
 
 void schedule(void) {
-	//printf("in schedule\r\n", NULL);
+	//printf("in schedule\r\n");
 	current->counter = 0;
 	_schedule();
 }

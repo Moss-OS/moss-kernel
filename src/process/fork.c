@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "process/fork.h"
 #include "process/sched.h"
 #include "bootstrapper/mm.h"

@@ -1,3 +1,5 @@
+#include <stdint.h>
+#include <stddef.h>
 #include "peripherals/uart.h"
 #include "stdio.h"
 #include "stdlib.h"

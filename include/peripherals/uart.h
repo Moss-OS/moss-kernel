@@ -1,8 +1,5 @@
 #pragma once
 
-#include <stddef.h>
-#include <stdint.h>
-
 // GPIO
 struct {
 	// The GPIO registers base address.
