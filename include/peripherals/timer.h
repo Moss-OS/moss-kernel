@@ -1,6 +1,5 @@
 #pragma once
 
-
 struct {
 	uint32_t base;
 	uint32_t control_status;
@@ -14,5 +13,5 @@ struct {
 #define TIMER_CS_M2	(1 << 2)
 #define TIMER_CS_M3	(1 << 3)
 
-void timer_init ( void );
-void handle_timer_irq ( void );
+void timer_init (void);
+void handle_timer_irq (void);

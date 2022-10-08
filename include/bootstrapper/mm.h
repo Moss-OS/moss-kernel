@@ -17,10 +17,8 @@
 #define PI4_PAGING_PAGES        (PI4_PAGING_MEMORY/PAGE_SIZE)
 
 #ifndef __ASSEMBLER__
-
 void init_mem_map();
 uint64_t get_free_page();
 void free_page(uint64_t p);
 void memzero(uint64_t src, uint64_t n);
-
 #endif

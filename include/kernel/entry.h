@@ -27,7 +27,5 @@
 #define SYSCALL_ERROR			17
 
 #ifndef __ASSEMBLER__
-
 void ret_from_fork(void);
-
 #endif
