@@ -1,12 +1,11 @@
 #pragma once
 
-
 struct {
-	unsigned int base;
-	unsigned int control_status;
-	unsigned int counter_low;
-	unsigned int counter_high;
-	unsigned int compare[4];
+	uint32_t base;
+	uint32_t control_status;
+	uint32_t counter_low;
+	uint32_t counter_high;
+	uint32_t compare[4];
 } timer_regs;
 
 #define TIMER_CS_M0	(1 << 0)
@@ -14,5 +13,5 @@ struct {
 #define TIMER_CS_M2	(1 << 2)
 #define TIMER_CS_M3	(1 << 3)
 
-void timer_init ( void );
-void handle_timer_irq ( void );
+void timer_init (void);
+void handle_timer_irq (void);

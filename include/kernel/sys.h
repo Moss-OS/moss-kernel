@@ -8,13 +8,11 @@
 #define SYS_EXIT_NUMBER     3
 
 #ifndef __ASSEMBLER__
-
 void sys_write(char * buf);
 int sys_fork();
 
 void call_sys_write(char * buf);
-int call_sys_clone(unsigned long fn, unsigned long arg, unsigned long stack);
-long call_sys_malloc();
+int call_sys_clone(uint64_t fn, uint64_t arg, uint64_t stack);
+uint64_t call_sys_malloc();
 void call_sys_exit();
-
 #endif

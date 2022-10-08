@@ -1,40 +1,37 @@
 #pragma once
 
-#include <stddef.h>
-#include <stdint.h>
-
 // GPIO
 struct {
 	// The GPIO registers base address.
-	unsigned int	base;
-	unsigned int	gpfsel1;
-	unsigned int	gpset0;
-	unsigned int	gpclr0;
-	unsigned int	gppud;
-	unsigned int	gppudclk0;
+	uint32_t	base;
+	uint32_t	gpfsel1;
+	uint32_t	gpset0;
+	uint32_t	gpclr0;
+	uint32_t	gppud;
+	uint32_t	gppudclk0;
 } gpio_regs;
 
 struct {
 	// The base address for UART.
-	unsigned int	base;
-	unsigned int	dr;
-	unsigned int    rsrecr;
-	unsigned int    fr;
-	unsigned int    ilpr;
-	unsigned int    ibrd;
-	unsigned int    fbrd;
-	unsigned int    lcrh;
-	unsigned int    cr;
-	unsigned int    ifls;
-	unsigned int    imsc;
-	unsigned int    ris;
-	unsigned int    mis;
-	unsigned int    icr;
-	unsigned int    dmacr;
-	unsigned int    itcr;
-	unsigned int    itip;
-	unsigned int    itop;
-	unsigned int    tdr;
+	uint32_t	base;
+	uint32_t	dr;
+	uint32_t    rsrecr;
+	uint32_t    fr;
+	uint32_t    ilpr;
+	uint32_t    ibrd;
+	uint32_t    fbrd;
+	uint32_t    lcrh;
+	uint32_t    cr;
+	uint32_t    ifls;
+	uint32_t    imsc;
+	uint32_t    ris;
+	uint32_t    mis;
+	uint32_t    icr;
+	uint32_t    dmacr;
+	uint32_t    itcr;
+	uint32_t    itip;
+	uint32_t    itop;
+	uint32_t    tdr;
 } uart0_regs;
 
 void uart_init();

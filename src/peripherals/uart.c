@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "peripherals/uart.h"
 #include "common/utils.h"
 #include "common/pi.h"
@@ -42,7 +43,7 @@ void uart_init (void)
     uart0_regs.itop   = (uart0_regs.base + 0x88);
     uart0_regs.tdr    = (uart0_regs.base + 0x8C);
 
-	unsigned int selector;
+	uint32_t selector;
 	selector = get32(gpio_regs.gpfsel1);
 	selector &= ~(7<<12);                   // clean gpio14
 	selector |= 4<<12;                      // set alt0 for gpio14

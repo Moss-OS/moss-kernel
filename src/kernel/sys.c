@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "process/fork.h"
 #include "common/printf.h"
 #include "common/utils.h"
@@ -8,12 +9,12 @@ void sys_write(char * buf) {
 	printf(buf);
 }
 
-int sys_clone(unsigned long stack) {
+int sys_clone(uint64_t stack) {
 	return copy_process(0, 0, 0, stack);
 }
 
-long sys_malloc() {
-	unsigned long addr = get_free_page();
+uint64_t sys_malloc() {
+	uint64_t addr = get_free_page();
 	if (!addr) {
 		return -1;
 	}

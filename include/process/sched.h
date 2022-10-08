@@ -15,19 +15,19 @@ struct task_struct *task_list;
 int nr_tasks;
 
 struct cpu_context {
-	unsigned long x19;
-	unsigned long x20;
-	unsigned long x21;
-	unsigned long x22;
-	unsigned long x23;
-	unsigned long x24;
-	unsigned long x25;
-	unsigned long x26;
-	unsigned long x27;
-	unsigned long x28;
-	unsigned long fp;
-	unsigned long sp;
-	unsigned long pc;
+	uint64_t x19;
+	uint64_t x20;
+	uint64_t x21;
+	uint64_t x22;
+	uint64_t x23;
+	uint64_t x24;
+	uint64_t x25;
+	uint64_t x26;
+	uint64_t x27;
+	uint64_t x28;
+	uint64_t fp;
+	uint64_t sp;
+	uint64_t pc;
 };
 
 struct task_struct {
@@ -38,7 +38,7 @@ struct task_struct {
 	long priority;
 	long preempt_count;
 	long stack;
-	unsigned long flags;
+	uint64_t flags;
 	struct task_struct *next_task;
 };
 

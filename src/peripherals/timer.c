@@ -1,11 +1,12 @@
+#include <stdint.h>
 #include "common/utils.h"
 #include "common/pi.h"
 #include "common/printf.h"
 #include "peripherals/timer.h"
 #include "process/sched.h"
 
-const unsigned int interval = 200000;
-unsigned int curVal = 0;
+const uint32_t interval = 200000;
+uint32_t curVal = 0;
 
 void timer_init ( void )
 {

@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "process/fork.h"
 #include "process/sched.h"
 #include "bootstrapper/mm.h"
@@ -5,7 +6,7 @@
 #include "common/printf.h"
 
 
-int copy_process(unsigned long clone_flags, unsigned long fn, unsigned long arg, unsigned long stack) {
+int copy_process(uint64_t clone_flags, uint64_t fn, uint64_t arg, uint64_t stack) {
 	preempt_disable();
 	struct task_struct *p;
 	struct task_struct *previous_task;
@@ -15,8 +16,8 @@ int copy_process(unsigned long clone_flags, unsigned long fn, unsigned long arg,
 		return 1;
 
 	struct pt_regs *childregs = task_pt_regs(p);
-	memzero((unsigned long)childregs, sizeof(struct pt_regs));
-	memzero((unsigned long)&p->cpu_context, sizeof(struct cpu_context));
+	memzero((uint64_t)childregs, sizeof(struct pt_regs));
+	memzero((uint64_t)&p->cpu_context, sizeof(struct cpu_context));
 
 	if (clone_flags & PF_KTHREAD) {
 		p->cpu_context.x19 = fn;
@@ -35,8 +36,8 @@ int copy_process(unsigned long clone_flags, unsigned long fn, unsigned long arg,
 
 	p->cpu_context.x19 = fn;
 	p->cpu_context.x20 = arg;
-	p->cpu_context.pc = (unsigned long)ret_from_fork;
-	p->cpu_context.sp = (unsigned long)childregs;
+	p->cpu_context.pc = (uint64_t)ret_from_fork;
+	p->cpu_context.sp = (uint64_t)childregs;
 	int pid = nr_tasks++;
 	p->id = pid;
 
@@ -52,12 +53,12 @@ int copy_process(unsigned long clone_flags, unsigned long fn, unsigned long arg,
 	return pid;
 }
 
-int move_to_user_mode(unsigned long pc) {
+int move_to_user_mode(uint64_t pc) {
 	struct pt_regs *regs = task_pt_regs(current);
-	memzero((unsigned long)regs, sizeof(*regs));
+	memzero((uint64_t)regs, sizeof(*regs));
 	regs->pc = pc;
 	regs->pstate = PSR_MODE_EL0t;
-	unsigned long stack = get_free_page(); //allocate new user stack
+	uint64_t stack = get_free_page(); //allocate new user stack
 	if (!stack) {
 		return -1;
 	}
@@ -68,6 +69,6 @@ int move_to_user_mode(unsigned long pc) {
 }
 
 struct pt_regs * task_pt_regs(struct task_struct *tsk) {
-	unsigned long p = (unsigned long)tsk + THREAD_SIZE - sizeof(struct pt_regs);
+	uint64_t p = (uint64_t)tsk + THREAD_SIZE - sizeof(struct pt_regs);
 	return (struct pt_regs *)p;
 }
