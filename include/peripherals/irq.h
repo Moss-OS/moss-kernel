@@ -25,10 +25,10 @@
 struct {
 	// Timer interrupts
 	struct {
-		unsigned int irq0;
-		unsigned int irq1;
-		unsigned int irq2;
-		unsigned int irq3;
+		uint32_t irq0;
+		uint32_t irq1;
+		uint32_t irq2;
+		uint32_t irq3;
 	} system_timer;
 } irqs;
 

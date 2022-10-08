@@ -71,7 +71,7 @@ void kernel_process() {
 	}
 }
 
-static unsigned int current_processor_index = 0;
+static uint32_t current_processor_index = 0;
 
 void kernel_main(unsigned long processor_index) {
 

@@ -31,18 +31,18 @@ const char entry_error_messages[18][32] = {
 	"SYSCALL_ERROR"
 };
 
-void enable_interrupt(unsigned int irq) {
+void enable_interrupt(uint32_t irq) {
 	printf("Interrupt %x enabled\r\n", irq);
-	unsigned int n = irq / 32;
-	unsigned int offset = irq % 32;
-	unsigned int enableRegister = GICD_ENABLE_IRQ_BASE + (4*n);
+	uint32_t n = irq / 32;
+	uint32_t offset = irq % 32;
+	uint32_t enableRegister = GICD_ENABLE_IRQ_BASE + (4*n);
 	printf("EnableRegister: %x\r\n", enableRegister);
 	put32(enableRegister, 1 << offset);
 }
 
-void assign_target(unsigned int irq, __attribute__((unused))unsigned int cpu) {
-	unsigned int n = irq / 4;
-	unsigned int targetRegister = GIC_IRQ_TARGET_BASE + (4*n);
+void assign_target(uint32_t irq, __attribute__((unused))uint32_t cpu) {
+	uint32_t n = irq / 4;
+	uint32_t targetRegister = GIC_IRQ_TARGET_BASE + (4*n);
 	 // Currently we only enter the target CPU 0
 	put32(targetRegister, get32(targetRegister) | (1 << 8));
 }
@@ -78,8 +78,8 @@ void show_invalid_entry_message(int type, uint64_t esr, uint64_t elr, uint64_t s
 
 void handle_irq(void)
 {
-	unsigned int irq;
-	unsigned int irq_ack_reg;
+	uint32_t irq;
+	uint32_t irq_ack_reg;
 
 	switch (pi_ver) {
 		case 3:

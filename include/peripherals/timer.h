@@ -2,11 +2,11 @@
 
 
 struct {
-	unsigned int base;
-	unsigned int control_status;
-	unsigned int counter_low;
-	unsigned int counter_high;
-	unsigned int compare[4];
+	uint32_t base;
+	uint32_t control_status;
+	uint32_t counter_low;
+	uint32_t counter_high;
+	uint32_t compare[4];
 } timer_regs;
 
 #define TIMER_CS_M0	(1 << 0)
