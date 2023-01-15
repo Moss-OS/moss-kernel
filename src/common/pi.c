@@ -2,6 +2,8 @@
 #include "common/utils.h"
 #include "common/pi.h"
 
+int pi_ver;
+
 int set_pi_ver (void) {
 	uint32_t cpu_id = get_core_info();
 	if (cpu_id == 0x410FD034) {

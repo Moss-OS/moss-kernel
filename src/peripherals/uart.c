@@ -3,6 +3,9 @@
 #include "common/utils.h"
 #include "common/pi.h"
 
+struct _gpio_regs gpio_regs;
+struct _uart0_regs uart0_regs;
+
 void uart_init (void)
 {
 	switch (pi_ver) {

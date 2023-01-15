@@ -22,7 +22,7 @@
 #define GICC_EOIR 				(GICC_CPU_BASE+0x00000010)
 #define GIC_IRQ_TARGET_BASE 	(GICD_DIST_BASE+0x00000800)
 
-struct {
+struct _irqs {
 	// Timer interrupts
 	struct {
 		uint32_t irq0;
@@ -30,7 +30,7 @@ struct {
 		uint32_t irq2;
 		uint32_t irq3;
 	} system_timer;
-} irqs;
+};
 
 // Functions
 void enable_interrupt_controller(void);

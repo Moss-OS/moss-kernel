@@ -8,11 +8,11 @@
 #define TASK_RUNNING				0
 #define TASK_ZOMBIE				1
 
-#define PF_KTHREAD		            	0x00000002	
+#define PF_KTHREAD		            	0x00000002
 
-struct task_struct *current;
-struct task_struct *task_list;
-int nr_tasks;
+extern struct task_struct *current;
+extern struct task_struct *task_list;
+extern int nr_tasks;
 
 struct cpu_context {
 	uint64_t x19;

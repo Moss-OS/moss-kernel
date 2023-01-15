@@ -5,6 +5,8 @@
 #include "peripherals/timer.h"
 #include "process/sched.h"
 
+struct _timer_regs timer_regs;
+
 const uint32_t interval = 200000;
 uint32_t curVal = 0;
 

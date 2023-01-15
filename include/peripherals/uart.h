@@ -1,7 +1,7 @@
 #pragma once
 
 // GPIO
-struct {
+struct _gpio_regs {
 	// The GPIO registers base address.
 	uint32_t	base;
 	uint32_t	gpfsel1;
@@ -9,9 +9,9 @@ struct {
 	uint32_t	gpclr0;
 	uint32_t	gppud;
 	uint32_t	gppudclk0;
-} gpio_regs;
+};
 
-struct {
+struct _uart0_regs {
 	// The base address for UART.
 	uint32_t	base;
 	uint32_t	dr;
@@ -32,7 +32,7 @@ struct {
 	uint32_t    itip;
 	uint32_t    itop;
 	uint32_t    tdr;
-} uart0_regs;
+};
 
 void uart_init();
 

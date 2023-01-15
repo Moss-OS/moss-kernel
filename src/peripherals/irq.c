@@ -6,6 +6,8 @@
 #include "kernel/entry.h"
 #include "peripherals/irq.h"
 
+struct _irqs irqs;
+
 const char entry_error_messages[18][32] = {
 	"SYNC_INVALID_EL1t",
 	"IRQ_INVALID_EL1t",

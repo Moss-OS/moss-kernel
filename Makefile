@@ -1,13 +1,13 @@
 # Compiler flags
-AARCH64_TOOLCHAIN_DIR = build/aarch64-unknown-linux-gnu
-ARMGNU = $(AARCH64_TOOLCHAIN_DIR)/bin/aarch64-unknown-linux-gnu
+AARCH64_TOOLCHAIN_DIR =
+ARMGNU = aarch64-linux-gnu
 CFLAGS = -Iinclude -Wall -Wextra -ffreestanding -mgeneral-regs-only -mcpu=$(CPU) -g
 ASMFLAGS = -Iinclude -g
-LDFLAGS = -nostdlib -nostartfiles
+LDFLAGS = -nostdlib
 
 # Machine and emulator targets
 CPU = cortex-a53
-QEMU_COMMAND = qemu-system-aarch64
+QEMU_COMMAND = /mnt/c/Program\ Files/qemu/qemu-system-aarch64.exe
 
 # Source directories (add additional subdirectories here)
 SRC_DIRS  = src/bootstrapper

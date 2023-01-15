@@ -4,6 +4,10 @@
 #include "common/printf.h"
 #include "bootstrapper/mm.h"
 
+struct task_struct *current;
+struct task_struct *task_list;
+int nr_tasks;
+
 static struct task_struct init_task = INIT_TASK;
 
 void init_scheduler() {
