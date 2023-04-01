@@ -66,8 +66,8 @@ debug: build
 
 deploy: build
 	@echo "==>" copying to SD card
-	cp -f ./build/kernel8.img /Volumes/boot/
-	cp -f ./build/config.txt /Volumes/boot/
-	sync
-	diskutil unmount /Volumes/boot/
+	sudo mount -t drvfs D: /mnt/d
+	cp -f ./build/kernel8.img /mnt/d/
+	cp -f ./build/config.txt /mnt/d/
+	sudo umount /mnt/d
 	@echo "==>" SD card ready
