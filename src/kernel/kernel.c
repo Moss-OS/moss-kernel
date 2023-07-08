@@ -104,10 +104,6 @@ void kernel_main(uint64_t processor_index) {
 		printf("Enable interrupts\r\n");
 		enable_irq();
 
-		//struct task_struct *p = current;
-		//printf("Kernel process %d\r\n", nr_tasks-1);
-		//print_task_info(p);
-
 		int res = copy_process(PF_KTHREAD, (uint64_t)&kernel_process, 0, 0);
 		if (res < 0) {
 			printf("Error while starting kernel process\r\n");
