@@ -1,11 +1,11 @@
 #pragma once
 
 struct _timer_regs {
-	uint32_t base;
-	uint32_t control_status;
-	uint32_t counter_low;
-	uint32_t counter_high;
-	uint32_t compare[4];
+	uint64_t base;
+	uint64_t control_status;
+	uint64_t counter_low;
+	uint64_t counter_high;
+	uint64_t compare[4];
 };
 
 #define TIMER_CS_M0	(1 << 0)

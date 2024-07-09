@@ -1,11 +1,14 @@
 # https://www.raspberrypi.com/documentation/computers/config_txt.html
 
+# Load the kernel to the memory address 0x0
+kernel_old=1 # https://www.raspberrypi.com/documentation/computers/legacy_config_txt.html#kernel_old
+
 # Enable 64 bit kernel support
 arm_64bit=1
 
 # Enable boot logging
-enable_uart=1
-uart_2ndstage=1
+#enable_uart=1
+#uart_2ndstage=1
 
 # Stop start.elf from filling in ATAGS
 disable_commandline_tags=1

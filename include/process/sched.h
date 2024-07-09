@@ -30,6 +30,21 @@ struct cpu_context {
 	uint64_t pc;
 };
 
+#define MAX_PROCESS_PAGES			16
+
+struct user_page {
+	uint64_t phys_addr;
+	uint64_t virt_addr;
+};
+
+struct mm_struct {
+	uint64_t pgd;
+	int user_pages_count;
+	struct user_page user_pages[MAX_PROCESS_PAGES];
+	int kernel_pages_count;
+	uint64_t kernel_pages[MAX_PROCESS_PAGES];
+};
+
 struct task_struct {
 	struct cpu_context cpu_context;
 	int id;
@@ -37,8 +52,8 @@ struct task_struct {
 	long counter;
 	long priority;
 	long preempt_count;
-	long stack;
 	uint64_t flags;
+	struct mm_struct mm;
 	struct task_struct *next_task;
 };
 
@@ -62,10 +77,16 @@ void print_task_info(struct task_struct *p);
 	0, /* id */\
 	0, /* state */\
 	0, /* counter */\
-	1, /* priority */\
-	0, /* prempt_cout */\
-	0, /* stack */\
+	15, /* priority */\
+	0, /* prempt_count */\
 	PF_KTHREAD, /* flags */\
+	{ /* mm */\
+		0, /* pgd */\
+		0, /* user_pages_count */\
+		{{0}}, /* user_pages */\
+		0, /* kernel_pages_count */\
+		{0} /* kernel_pages */\
+	},\
 	0  /* *next_task */\
 }
 
