@@ -8,8 +8,31 @@ ENTRY(_start)
 SECTIONS
 {
     /* Starts at LOADER_ADDR. */
-    . = 0x80000;
+    . = 0xffff000000000000;
     __start = .;
+
+	.text.boot : { *(.text.boot) }
+	. = ALIGN(0x00001000);
+
+    /* user space */
+    user_begin = .;
+    .text.user :
+    {
+        build/obj/user* (.text)
+    }
+	.rodata.user :
+    {
+        build/obj/user* (.rodata)
+    }
+	.data.user :
+    {
+        build/obj/user* (.data)
+    }
+	.bss.user :
+    {
+        build/obj/user* (.bss)
+    }
+	user_end = .;
 
     /* executable code */
     __text_start = .;
@@ -49,4 +72,6 @@ SECTIONS
     . = ALIGN(4096);
     __bss_end = .;
     __end = .;
+	pg_dir = .;
+	.data.pgd : { . += (3 * (1 << 12)); }
 }

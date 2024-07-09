@@ -3,7 +3,6 @@
 #include "common/printf.h"
 
 char getc(void);
-void putc(void *p, char c);
 
 void puts(const char * s);
 

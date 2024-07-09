@@ -62,7 +62,7 @@ void enable_interrupt_controller()
 			put32(ENABLE_IRQS_1, irqs.system_timer.irq1);
 			break;
 
-		case 4:
+		case 4: // TODO_FIX_PI4
 		 	irqs.system_timer.irq0 = (0x60); //96
 			irqs.system_timer.irq1 = (0x61); //97
 			irqs.system_timer.irq2 = (0x62); //98

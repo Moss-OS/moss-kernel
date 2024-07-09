@@ -1,15 +1,11 @@
 #include <stdint.h>
 #include <stddef.h>
-#include "peripherals/uart.h"
+#include "mini_uart.h"
 #include "stdio.h"
 #include "stdlib.h"
 
 char getc() {
     return uart_recv();
-}
-
-void putc(__attribute__((unused))void *p, char c) {
-    uart_send(c);
 }
 
 void puts(const char * str) {

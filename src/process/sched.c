@@ -3,6 +3,7 @@
 #include "peripherals/irq.h"
 #include "common/printf.h"
 #include "bootstrapper/mm.h"
+#include "common/utils.h"
 
 struct task_struct *current;
 struct task_struct *task_list;
@@ -73,6 +74,7 @@ void switch_to(struct task_struct * next) {
 		return;
 	struct task_struct * prev = current;
 	current = next;
+	set_pgd(next->mm.pgd);
 	cpu_switch_to(prev, next);
 }
 
@@ -102,9 +104,6 @@ void exit_process() {
 			p->state = TASK_ZOMBIE;
 			break;
 		}
-	}
-	if (current->stack) {
-		free_page(current->stack);
 	}
 	preempt_enable();
 	schedule();
