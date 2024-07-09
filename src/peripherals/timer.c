@@ -4,6 +4,7 @@
 #include "common/printf.h"
 #include "peripherals/timer.h"
 #include "process/sched.h"
+#include "peripherals/base.h"
 
 struct _timer_regs timer_regs;
 
@@ -14,9 +15,10 @@ void timer_init ( void )
 {
 	switch (pi_ver) {
 		case 3:
-			timer_regs.base = 0x3F000000;
+			timer_regs.base = PBASE;
 			break;
 		case 4:
+			// TODO_FIX_PI4
 			timer_regs.base = 0xFE000000;
 			break;
 	}

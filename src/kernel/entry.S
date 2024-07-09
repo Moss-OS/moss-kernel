@@ -23,7 +23,7 @@
 	b \label
 .endm
 
-.macro kernel_entry el
+.macro kernel_entry, el
 	sub	sp, sp, #S_FRAME_SIZE
 	stp	x0, x1, [sp, #16 * 0]
 	stp	x2, x3, [sp, #16 * 1]
@@ -80,7 +80,6 @@
 	ldp	x24, x25, [sp, #16 * 12]
 	ldp	x26, x27, [sp, #16 * 13]
 	ldp	x28, x29, [sp, #16 * 14]
-	ldr	x30, [sp, #16 * 15]
 	add	sp, sp, #S_FRAME_SIZE
 	eret
 .endm
@@ -165,7 +164,9 @@ el0_sync:
 	mrs	x25, esr_el1				// read the syndrome register
 	lsr	x24, x25, #ESR_ELx_EC_SHIFT	// exception class
 	cmp	x24, #ESR_ELx_EC_SVC64		// SVC in 64-bit state
-	b	el0_svc
+	b.eq	el0_svc
+	cmp	x24, #ESR_ELx_EC_DABT_LOW	// data abort in EL0
+	b.eq	el0_da
 	handle_error 0, SYNC_ERROR
 
 sc_nr	.req	x25					// number of system calls
@@ -190,12 +191,24 @@ ret_from_syscall:
 	str	x0, [sp, #S_X0]				// returned x0
 	kernel_exit 0
 
+el0_da:
+	bl	enable_irq
+	mrs	x0, far_el1
+	mrs	x1, esr_el1
+	bl	do_mem_abort
+	cmp x0, 0
+	b.eq 1f
+	handle_error 0, DATA_ABORT_ERROR
+1:
+	bl disable_irq
+	kernel_exit 0
+
 .globl ret_from_fork
 ret_from_fork:
 	bl	schedule_tail
 	cbz	x19, ret_to_user			// not a kernel thread
 	mov	x0, x20
-	blr	x19 						//should never return
+	blr	x19
 ret_to_user:
 	bl disable_irq
 	kernel_exit 0
