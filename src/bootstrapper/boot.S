@@ -22,7 +22,7 @@ _start:
 proc_hang:
 	b 		proc_hang
 
-init_bss:
+init_bss: 									// currently unused, was needed for using multiple cores
 	adr		x0, __bss_start 				// Init bss
 	adr		x1, __bss_end
 	sub		x1, x1, x0
@@ -44,9 +44,23 @@ master:  									// Setup EL https://github.com/s-matyukevich/raspberry-pi-os/b
 	ldr		x0, =SCTLR_VALUE_MMU_DISABLED	// Config el1 little endian, diable instruction and data cache, disable MMU
 	msr		sctlr_el1, x0
 
-	ldr		x0, =HCR_VALUE					// Config el2 (hypervisor) to AArch64
+	mrs 	x0, CurrentEL
+    lsr 	x0, x0, #2
+	cmp 	x0, #3
+	beq 	el3
+
+	mrs		x0, hcr_el2
+	orr		x0, x0, #(1<<31)
 	msr		hcr_el2, x0
 
+	mov 	x0, #SPSR_VALUE
+	msr		spsr_el2, x0
+
+	adr		x0, enter_el1
+	msr		elr_el2, x0
+	eret
+
+el3:
 	ldr		x0, =SCR_VALUE
 	msr		scr_el3, x0
 
@@ -59,12 +73,21 @@ master:  									// Setup EL https://github.com/s-matyukevich/raspberry-pi-os/b
 	eret
 
 enter_el1:
+	adr		x0, __bss_start 				// Init bss
+	adr		x1, __bss_end
+	sub		x1, x1, x0
+	bl		memzero
+
 	mrs		x0, mpidr_el1
 	and		x0, x0, #0xFF					// Get core id
 	mov		x1, #SECTION_SIZE
 	mul		x1, x1, x0						// Calculate SP for core
 	add		x1, x1, #LOW_MEMORY
 	mov		sp, x1							// Setup SP
+
+	bl		__create_idmap
+	adrp	x0, idmap_dir
+	msr		ttbr0_el1, x0
 
 	bl 		__create_page_tables
 
@@ -117,6 +140,25 @@ enter_el1:
 	cmp		\start, \end
 	b.ls	9999b
 .endm
+
+__create_idmap:												// Identiy paging (https://wiki.osdev.org/Identity_Paging) for qemu
+	mov		x29, x30
+
+	adrp	x0, idmap_dir
+	mov		x1, #PG_DIR_SIZE
+	bl		memzero
+
+	adrp	x0, idmap_dir
+	mov		x1, xzr
+	create_pgd_entry x0, x1, x2, x3
+
+	mov		x1, xzr
+	mov		x2, xzr
+	ldr		x3, =(PHYS_MEMORY_SIZE)
+	create_block_map x0, x1, x2, x3, MMU_FLAGS, x4
+
+	mov		x30, x29
+	ret
 
 __create_page_tables:
 	mov		x29, x30										// save return address

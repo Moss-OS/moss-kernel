@@ -8,7 +8,7 @@ ENTRY(_start)
 SECTIONS
 {
     /* Starts at LOADER_ADDR. */
-    . = 0xffff000000000000;
+    . = 0xffff000000080000;
     __start = .;
 
 	.text.boot : { *(.text.boot) }
@@ -72,6 +72,13 @@ SECTIONS
     . = ALIGN(4096);
     __bss_end = .;
     __end = .;
+    . = ALIGN(0x00001000);
+
+    /* ID paging, needed for qemu (see https://wiki.osdev.org/Identity_Paging) */
+	idmap_dir = .;
+	.data.idmapd : {. += (3* (1 << 12));}
+
+    /* paging area */
 	pg_dir = .;
 	.data.pgd : { . += (3 * (1 << 12)); }
 }

@@ -58,11 +58,11 @@ clean:
 
 emu: build
 	@echo "==>" starting emulator
-	$(QEMU_COMMAND) -m 1024 -machine type=raspi3b -serial stdio -kernel $(IMG_NAME)
+	$(QEMU_COMMAND) -machine raspi3b -serial null -serial mon:stdio -kernel $(IMG_NAME)
 
 debug: build
 	@echo "==>" starting emulator
-	$(QEMU_COMMAND) -m 1024 -machine type=raspi3b -serial stdio -kernel $(IMG_NAME) -s -S
+	$(QEMU_COMMAND) -machine raspi3b -serial null -serial mon:stdio -kernel $(IMG_NAME) -s -S
 
 deploy: build
 	@echo "==>" copying to SD card
