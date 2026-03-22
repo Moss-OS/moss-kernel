@@ -86,7 +86,7 @@ static void* stdout_putp;
 static void uli2a(unsigned long int num, unsigned int base, int uc,char * bf)
 	{
 	int n=0;
-	unsigned int d=1;
+	unsigned long d=1;
 	while (num/d >= base)
 		d*=base;
 	while (d!=0) {
@@ -109,6 +109,37 @@ static void li2a (long num, char * bf)
 		}
 	uli2a(num,10,0,bf);
 	}
+
+#ifdef PRINTF_LONG_LONG_SUPPORT
+// 64-bit unsigned long long to ascii
+static void ulli2a(unsigned long long num, unsigned int base, int uc, char * bf)
+	{
+	int n=0;
+	unsigned long long d=1;
+	while (num/d >= base)
+		d*=base;
+	while (d!=0) {
+		int dgt = num / d;
+		num%=d;
+		d/=base;
+		if (n || dgt>0|| d==0) {
+			*bf++ = dgt+(dgt<10 ? '0' : (uc ? 'A' : 'a')-10);
+			++n;
+			}
+		}
+	*bf=0;
+	}
+
+// 64-bit signed long long to ascii
+static void lli2a (long long num, char * bf)
+	{
+	if (num<0) {
+		num=-num;
+		*bf++ = '-';
+		}
+	ulli2a(num,10,0,bf);
+	}
+#endif
 
 #endif
 
@@ -180,7 +211,7 @@ static void putchw(void* putp,putcf putf,int n, char z, char* bf)
 
 void tfp_format(void* putp,putcf putf,char *fmt, va_list va)
 	{
-	char bf[12];
+	char bf[24];  // Increased to handle 64-bit hex (16 digits + padding)
 
 	char ch;
 
@@ -206,6 +237,13 @@ void tfp_format(void* putp,putcf putf,char *fmt, va_list va)
 			if (ch=='l') {
 				ch=*(fmt++);
 				lng=1;
+#ifdef PRINTF_LONG_LONG_SUPPORT
+				// Check for 'll' (long long)
+				if (ch=='l') {
+					ch=*(fmt++);
+					lng=2;
+				}
+#endif
 			}
 #endif
 			switch (ch) {
@@ -213,6 +251,11 @@ void tfp_format(void* putp,putcf putf,char *fmt, va_list va)
 					goto abort;
 				case 'u' : {
 #ifdef 	PRINTF_LONG_SUPPORT
+#ifdef PRINTF_LONG_LONG_SUPPORT
+					if (lng==2)
+						ulli2a(va_arg(va, unsigned long long),10,0,bf);
+					else
+#endif
 					if (lng)
 						uli2a(va_arg(va, unsigned long int),10,0,bf);
 					else
@@ -223,6 +266,11 @@ void tfp_format(void* putp,putcf putf,char *fmt, va_list va)
 					}
 				case 'd' :  {
 #ifdef 	PRINTF_LONG_SUPPORT
+#ifdef PRINTF_LONG_LONG_SUPPORT
+					if (lng==2)
+						lli2a(va_arg(va, long long),bf);
+					else
+#endif
 					if (lng)
 						li2a(va_arg(va, unsigned long int),bf);
 					else
@@ -233,6 +281,11 @@ void tfp_format(void* putp,putcf putf,char *fmt, va_list va)
 					}
 				case 'x': case 'X' :
 #ifdef 	PRINTF_LONG_SUPPORT
+#ifdef PRINTF_LONG_LONG_SUPPORT
+					if (lng==2)
+						ulli2a(va_arg(va, unsigned long long),16,(ch=='X'),bf);
+					else
+#endif
 					if (lng)
 						uli2a(va_arg(va, unsigned long int),16,(ch=='X'),bf);
 					else

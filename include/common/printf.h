@@ -150,6 +150,10 @@ regs Kusti, 23.10.2004
 
 #include <stdarg.h>
 
+// Enable support for long long (64-bit) integers on AArch64
+#define PRINTF_LONG_SUPPORT
+#define PRINTF_LONG_LONG_SUPPORT
+
 void init_printf(void* putp,void (*putf) (void*,char));
 
 void tfp_printf(char *fmt, ...);
