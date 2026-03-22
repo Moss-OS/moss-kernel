@@ -23,8 +23,10 @@ proc_hang:
 	b 		proc_hang
 
 init_bss: 									// currently unused, was needed for using multiple cores
-	adr		x0, __bss_start 				// Init bss
-	adr		x1, __bss_end
+	adrp	x0, __bss_start 				// Init bss
+	add		x0, x0, :lo12:__bss_start
+	adrp	x1, __bss_end
+	add		x1, x1, :lo12:__bss_end
 	sub		x1, x1, x0
 	bl		memzero
 
@@ -73,8 +75,10 @@ el3:
 	eret
 
 enter_el1:
-	adr		x0, __bss_start 				// Init bss
-	adr		x1, __bss_end
+	adrp	x0, __bss_start 				// Init bss
+	add		x0, x0, :lo12:__bss_start
+	adrp	x1, __bss_end
+	add		x1, x1, :lo12:__bss_end
 	sub		x1, x1, x0
 	bl		memzero
 

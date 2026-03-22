@@ -9,6 +9,7 @@
 #include "process/fork.h"
 #include "kernel/sys.h"
 #include "process/user.h"
+#include "bootstrapper/mm.h"
 
 
 void kernel_process() {
@@ -55,7 +56,17 @@ void kernel_main(uint64_t processor_index) {
 		// if current_processor_index == 4 then all processors are done
 		//while (current_processor_index != 4) { }
 
-		printf("Initializing memory map\r\n");
+	printf("\r\n");
+	printf("=== Virtual Memory Test ===\r\n");
+	printf("kernel_main VA: 0x%016lx\r\n", (unsigned long)&kernel_main);
+	printf("VA_START:       0x%016lx\r\n", (unsigned long)VA_START);
+	printf("TTBR0_EL1:      0x%016lx\r\n", (unsigned long)get_ttbr0_el1());
+	printf("TTBR1_EL1:      0x%016lx\r\n", (unsigned long)get_ttbr1_el1());
+	printf("SCTLR_EL1:      0x%016lx (MMU %s)\r\n", 
+	       (unsigned long)get_sctlr_el1(), 
+	       (get_sctlr_el1() & 1) ? "ENABLED" : "DISABLED");
+	printf("===========================\r\n");
+	printf("\r\n");		printf("Initializing memory map\r\n");
 		init_mem_map();
 		printf("Initializing scheduler\r\n");
 		init_scheduler();

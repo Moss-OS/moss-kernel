@@ -2,22 +2,23 @@
 #include "bootstrapper/mm.h"
 #include "arm/mmu.h"
 #include "common/pi.h"
+#include "common/printf.h"
 
 uint16_t *mem_map;
+static uint16_t pi3_mem_map[PI3_PAGING_PAGES];
+static uint16_t pi4_mem_map[PI4_PAGING_PAGES];
 
 void init_mem_map()
 {
 	int pages;
 	switch(pi_ver) {
 		case 3: ;
-			uint16_t mm3[PI3_PAGING_PAGES];
 			pages = PI3_PAGING_PAGES;
-			mem_map = mm3;
+			mem_map = pi3_mem_map;
 			break;
 		case 4: ; // TODO_FIX_PI4
-			uint16_t mm4[PI4_PAGING_PAGES];
 			pages = PI4_PAGING_PAGES;
-			mem_map = mm4;
+			mem_map = pi4_mem_map;
 			break;
 	}
 	for (int i = 0; i < pages; i++){
@@ -118,21 +119,19 @@ int copy_virt_memory(struct task_struct *dst) {
 	return 0;
 }
 
-static int ind = 1;
-
 int do_mem_abort(uint64_t addr, uint64_t esr) {
 	uint64_t dfs = (esr & 0b111111);
 	if ((dfs & 0b111100) == 0b100) {
+		printf("[VM] Page fault at 0x%016lx - allocating page\r\n", (unsigned long)addr);
 		uint64_t page = get_free_page();
 		if (page == 0) {
+			printf("[VM] ERROR: Failed to allocate page!\r\n");
 			return -1;
 		}
 		map_page(current, addr & PAGE_MASK, page);
-		ind++;
-		if (ind > 2){
-			return -1;
-		}
+		printf("[VM] Page allocated and mapped successfully\r\n");
 		return 0;
 	}
+	printf("[VM] Page fault at 0x%016lx with unexpected fault status: 0x%lx\r\n", (unsigned long)addr, (unsigned long)dfs);
 	return -1;
 }

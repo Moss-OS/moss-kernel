@@ -46,3 +46,18 @@ get_pgd:
 	msr	ttbr0_el1, x0
 	ldr x0, [x1]
 	ret
+
+.globl get_ttbr0_el1
+get_ttbr0_el1:
+	mrs x0, ttbr0_el1
+	ret
+
+.globl get_ttbr1_el1
+get_ttbr1_el1:
+	mrs x0, ttbr1_el1
+	ret
+
+.globl get_sctlr_el1
+get_sctlr_el1:
+	mrs x0, sctlr_el1
+	ret

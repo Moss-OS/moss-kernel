@@ -13,7 +13,16 @@ void loop(char* str) {
 }
 
 void user_process() {
-	call_sys_write("User process\n\r");
+	call_sys_write("User process started\n\r");
+	
+	// Test page fault handling - access unmapped memory
+	call_sys_write("Testing page fault...\n\r");
+	volatile char *test_ptr = (char *)0x400000; // Unmapped user VA
+	*test_ptr = 'X'; // Should trigger page fault and allocate page
+	if (*test_ptr == 'X') {
+		call_sys_write("Page fault test PASSED - page allocated!\n\r");
+	}
+	
 	int pid = call_sys_fork();
 	if (pid < 0) {
 		call_sys_write("Error during fork\n\r");

@@ -3,3 +3,4 @@
 /build/kernel8.elf
 /build/kernel8.lst
 /build/aarch64-unknown-linux-gnu
+.vscode/

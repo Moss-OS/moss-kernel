@@ -36,7 +36,7 @@ OBJECTS += $(patsubst %.S, $(OBJ_DIR)/%_s.o, $(notdir $(ASM_SOURCES)))
 build: $(OBJECTS) $(HEADERS)
 	@echo "==>" linking $(OBJECTS)
 	$(ARMGNU)-ld $(LDFLAGS) -T $(BUILD_DIR)/linker.ld -o $(BIN_NAME) $(OBJECTS)
-	$(ARMGNU)-objdump -D $(BIN_NAME) > $(LST_NAME)
+	$(ARMGNU)-objdump -d $(BIN_NAME) > $(LST_NAME)
 	$(ARMGNU)-objcopy $(BIN_NAME) -O binary $(IMG_NAME)
 
 $(OBJ_DIR)/%_c.o: %.c

@@ -13,4 +13,8 @@ extern void delay(uint64_t);
 extern void set_pgd(uint64_t pgd);
 extern uint64_t get_pgd();
 
+extern uint64_t get_ttbr0_el1(void);
+extern uint64_t get_ttbr1_el1(void);
+extern uint64_t get_sctlr_el1(void);
+
 #endif
