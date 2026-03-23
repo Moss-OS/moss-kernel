@@ -74,7 +74,7 @@ File: printf.c
  ------------------------------------------------------------------------------------------------
 */
 
-#include "printf.h"
+#include "common/printf.h"
 
 typedef void (*putcf) (void*,char);
 static putcf stdout_putf;

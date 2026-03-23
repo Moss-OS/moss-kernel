@@ -27,7 +27,7 @@ static uint32_t current_processor_index = 0;
 
 void kernel_main(uint64_t processor_index) {
 
-	if (processor_index == 1) {
+	if (processor_index == 0) {
 		pi_ver = set_pi_ver();
 		mini_uart_init();
 		init_printf("", putc);

@@ -110,9 +110,19 @@ enter_el1:
 
 	ldr		x2, =kernel_main
 
-	mov		x0, #SCTLR_MMU_ENABLED
+	mrs		x0, mpidr_el1
+	and		x19, x0, #0xFF						// Save core id in callee-saved register
+
+	tlbi	vmalle1is								// Invalidate all TLB entries
+	dsb		ish										// Ensure TLB invalidation completed
+	isb												// Synchronize context
+
+	ldr		x0, =(SCTLR_VALUE_MMU_ENABLED)
 	msr		sctlr_el1, x0
 
+	isb												// Ensure MMU enabled before next instruction
+
+	mov		x0, x19									// Pass core id as first argument to kernel_main
 	br 		x2
 
 .macro create_pgd_entry, tbl, virt, tmp1, tmp2
@@ -156,10 +166,17 @@ __create_idmap:												// Identiy paging (https://wiki.osdev.org/Identity_Pa
 	mov		x1, xzr
 	create_pgd_entry x0, x1, x2, x3
 
+	/* Map kernel and init stack as normal memory */
 	mov		x1, xzr
 	mov		x2, xzr
-	ldr		x3, =(PHYS_MEMORY_SIZE)
+	ldr		x3, =(DEVICE_BASE - SECTION_SIZE)
 	create_block_map x0, x1, x2, x3, MMU_FLAGS, x4
+
+	/* Map device memory with device attributes */
+	mov		x1, #DEVICE_BASE
+	mov		x2, #DEVICE_BASE
+	ldr		x3, =(PHYS_MEMORY_SIZE - SECTION_SIZE)
+	create_block_map x0, x1, x2, x3, MMU_DEVICE_FLAGS, x4
 
 	mov		x30, x29
 	ret

@@ -7,6 +7,7 @@ get_core_info:
 get_core_id:
 	mrs x0, mpidr_el1
 	and x0, x0, #0xFF
+	ret
 
 .globl get_el
 get_el:
