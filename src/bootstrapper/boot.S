@@ -162,21 +162,37 @@ __create_idmap:												// Identiy paging (https://wiki.osdev.org/Identity_Pa
 	mov		x1, #PG_DIR_SIZE
 	bl		memzero
 
-	adrp	x0, idmap_dir
-	mov		x1, xzr
-	create_pgd_entry x0, x1, x2, x3
+	adrp	x9, idmap_dir										// L0 table
+	add		x10, x9, #PAGE_SIZE							// L1 (PUD)
+	orr		x11, x10, #MM_TYPE_PAGE_TABLE
+	str		x11, [x9]
 
-	/* Map kernel and init stack as normal memory */
+	add		x12, x9, #(2 * PAGE_SIZE)					// L2 PMD for 0x00000000-0x3FFFFFFF
+	orr		x13, x12, #MM_TYPE_PAGE_TABLE
+	str		x13, [x10]										// PUD[0]
+
+	add		x14, x9, #(3 * PAGE_SIZE)					// L2 PMD for 0xC0000000-0xFFFFFFFF
+	orr		x15, x14, #MM_TYPE_PAGE_TABLE
+	mov		x16, #3
+	str		x15, [x10, x16, lsl #3]					// PUD[3]
+
+	/* Map RAM and kernel image as normal memory */
 	mov		x1, xzr
 	mov		x2, xzr
-	ldr		x3, =(DEVICE_BASE - SECTION_SIZE)
-	create_block_map x0, x1, x2, x3, MMU_FLAGS, x4
+	ldr		x3, =(PI3_DEVICE_BASE - SECTION_SIZE)
+	create_block_map x12, x1, x2, x3, MMU_FLAGS, x4
 
-	/* Map device memory with device attributes */
-	mov		x1, #DEVICE_BASE
-	mov		x2, #DEVICE_BASE
+	/* Map Pi2/Pi3 device memory window with device attributes */
+	ldr		x1, =PI3_DEVICE_BASE
+	ldr		x2, =PI3_DEVICE_BASE
+	ldr		x3, =(0x40000000 - SECTION_SIZE)
+	create_block_map x12, x1, x2, x3, MMU_DEVICE_FLAGS, x4
+
+	/* Map Pi4 high device/GIC window with device attributes */
+	ldr		x1, =PI4_DEVICE_BASE
+	ldr		x2, =PI4_DEVICE_BASE
 	ldr		x3, =(PHYS_MEMORY_SIZE - SECTION_SIZE)
-	create_block_map x0, x1, x2, x3, MMU_DEVICE_FLAGS, x4
+	create_block_map x14, x1, x2, x3, MMU_DEVICE_FLAGS, x4
 
 	mov		x30, x29
 	ret
@@ -188,21 +204,36 @@ __create_page_tables:
 	mov		x1, #PG_DIR_SIZE
 	bl 		memzero
 
-	adrp	x0, pg_dir
-	mov		x1, #VA_START
-	create_pgd_entry x0, x1, x2, x3
+	adrp	x9, pg_dir
+	ldr		x1, =VA_START
+	create_table_entry x9, x1, PGD_SHIFT, x2, x3				// L0->L1 for kernel VA range
 
-	/* Mapping kernel and init stack*/
-	mov 	x1, xzr												// start mapping from physical offset 0
-	mov 	x2, #VA_START										// first virtual address
-	ldr		x3, =(VA_START + DEVICE_BASE - SECTION_SIZE)		// last virtual address
-	create_block_map x0, x1, x2, x3, MMU_FLAGS, x4
+	add		x10, x9, #PAGE_SIZE							// L2 PMD for VA_START+0x0-0x3FFFFFFF
+	orr		x11, x10, #MM_TYPE_PAGE_TABLE
+	str		x11, [x9]										// PUD[0]
 
-	/* Mapping device memory*/
-	mov 	x1, #DEVICE_BASE									// start mapping from device base address
-	ldr 	x2, =(VA_START + DEVICE_BASE)						// first virtual address
-	ldr		x3, =(VA_START + PHYS_MEMORY_SIZE - SECTION_SIZE)	// last virtual address
-	create_block_map x0, x1, x2, x3, MMU_DEVICE_FLAGS, x4
+	add		x12, x9, #(2 * PAGE_SIZE)					// L2 PMD for VA_START+0xC0000000-0xFFFFFFFF
+	orr		x13, x12, #MM_TYPE_PAGE_TABLE
+	mov		x14, #3
+	str		x13, [x9, x14, lsl #3]						// PUD[3]
+
+	/* Map kernel image and low RAM as normal memory */
+	mov 	x1, xzr
+	ldr 	x2, =VA_START
+	ldr		x3, =(VA_START + PI3_DEVICE_BASE - SECTION_SIZE)
+	create_block_map x10, x1, x2, x3, MMU_FLAGS, x4
+
+	/* Map Pi2/Pi3 device window as device memory */
+	ldr 	x1, =PI3_DEVICE_BASE
+	ldr 	x2, =(VA_START + PI3_DEVICE_BASE)
+	ldr		x3, =(VA_START + 0x40000000 - SECTION_SIZE)
+	create_block_map x10, x1, x2, x3, MMU_DEVICE_FLAGS, x4
+
+	/* Map Pi4 high device/GIC window as device memory */
+	ldr 	x1, =PI4_DEVICE_BASE
+	ldr 	x2, =(VA_START + PI4_DEVICE_BASE)
+	ldr		x3, =(VA_START + PHYS_MEMORY_SIZE - SECTION_SIZE)
+	create_block_map x12, x1, x2, x3, MMU_DEVICE_FLAGS, x4
 
 	mov	x30, x29												// restore return address
 	ret

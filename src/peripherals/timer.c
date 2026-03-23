@@ -13,15 +13,7 @@ uint32_t curVal = 0;
 
 void timer_init ( void )
 {
-	switch (pi_ver) {
-		case 3:
-			timer_regs.base = PBASE;
-			break;
-		case 4:
-			// TODO_FIX_PI4
-			timer_regs.base = 0xFE000000;
-			break;
-	}
+	timer_regs.base = PBASE;
 	timer_regs.control_status	= (timer_regs.base+0x00003000);
 	timer_regs.counter_low		= (timer_regs.base+0x00003004);
 	timer_regs.counter_high		= (timer_regs.base+0x00003008);

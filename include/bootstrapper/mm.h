@@ -4,7 +4,7 @@
 
 #define VA_START 				0xffff000000000000
 
-#define PHYS_MEMORY_SIZE 		0x40000000
+#define PHYS_MEMORY_SIZE 		0x100000000
 
 #define PAGE_MASK				0xfffffffffffff000
 #define PAGE_SHIFT	 			12
@@ -16,10 +16,10 @@
 
 #define LOW_MEMORY              (2 * SECTION_SIZE)
 
-#define PI3_HIGH_MEMORY         DEVICE_BASE
+#define PI3_HIGH_MEMORY         PI3_DEVICE_BASE
 #define PI3_PAGING_MEMORY       (PI3_HIGH_MEMORY - LOW_MEMORY)
 #define PI3_PAGING_PAGES        (PI3_PAGING_MEMORY/PAGE_SIZE)
-#define PI4_HIGH_MEMORY         0xFE000000 // TODO_FIX_PI4
+#define PI4_HIGH_MEMORY         PI4_DEVICE_BASE
 #define PI4_PAGING_MEMORY       (PI4_HIGH_MEMORY - LOW_MEMORY)
 #define PI4_PAGING_PAGES        (PI4_PAGING_MEMORY/PAGE_SIZE)
 
@@ -29,7 +29,7 @@
 #define PUD_SHIFT				PAGE_SHIFT + 2*TABLE_SHIFT
 #define PMD_SHIFT				PAGE_SHIFT + TABLE_SHIFT
 
-#define PG_DIR_SIZE				(3 * PAGE_SIZE)
+#define PG_DIR_SIZE				(4 * PAGE_SIZE)
 
 #ifndef __ASSEMBLER__
 #include "process/sched.h"

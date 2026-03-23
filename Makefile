@@ -60,9 +60,17 @@ emu: build
 	@echo "==>" starting emulator
 	$(QEMU_COMMAND) -machine raspi3b -serial null -serial mon:stdio -kernel $(IMG_NAME)
 
+emu4: build
+	@echo "==>" starting emulator \(Pi4\)
+	$(QEMU_COMMAND) -machine raspi4b -serial mon:stdio -kernel $(IMG_NAME)
+
 debug: build
 	@echo "==>" starting emulator
 	$(QEMU_COMMAND) -machine raspi3b -serial null -serial mon:stdio -kernel $(IMG_NAME) -s -S
+
+debug4: build
+	@echo "==>" starting emulator \(Pi4\)
+	$(QEMU_COMMAND) -machine raspi4b -serial mon:stdio -kernel $(IMG_NAME) -s -S
 
 deploy: build
 	@echo "==>" copying to SD card

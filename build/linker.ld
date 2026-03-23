@@ -76,9 +76,9 @@ SECTIONS
 
     /* ID paging, needed for qemu (see https://wiki.osdev.org/Identity_Paging) */
 	idmap_dir = .;
-	.data.idmapd : {. += (3* (1 << 12));}
+    .data.idmapd : {. += (4* (1 << 12));}
 
     /* paging area */
 	pg_dir = .;
-	.data.pgd : { . += (3 * (1 << 12)); }
+    .data.pgd : { . += (4 * (1 << 12)); }
 }

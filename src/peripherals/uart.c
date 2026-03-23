@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "peripherals/uart.h"
+#include "peripherals/base.h"
 #include "common/utils.h"
 #include "common/pi.h"
 
@@ -8,15 +9,7 @@ struct _uart0_regs uart0_regs;
 
 void uart_init (void)
 {
-	switch (pi_ver) {
-		case 3:
-			gpio_regs.base = 0x3f200000;   // pi2 & 3
-			break;
-
-		case 4:
-			gpio_regs.base = 0xFE200000;   // pi4
-			break;
-	}
+	gpio_regs.base = pbase + 0x00200000;
 
 	// GPIO
 	gpio_regs.gpfsel1		= (gpio_regs.base + 0x04);

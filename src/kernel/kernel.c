@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "peripherals/mini_uart.h"
+#include "peripherals/uart.h"
 #include "common/utils.h"
 #include "common/pi.h"
 #include "stdio.h"
@@ -29,7 +30,12 @@ void kernel_main(uint64_t processor_index) {
 
 	if (processor_index == 0) {
 		pi_ver = set_pi_ver();
-		mini_uart_init();
+		init_peripheral_bases();
+		if (pi_ver == 4) {
+			uart_init();
+		} else {
+			mini_uart_init();
+		}
 		init_printf("", putc);
 
 		printf("\r\n");

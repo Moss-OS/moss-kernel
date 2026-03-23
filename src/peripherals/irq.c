@@ -60,11 +60,16 @@ void enable_interrupt_controller()
 			put32(ENABLE_IRQS_1, irqs.system_timer.irq1);
 			break;
 
-		case 4: // TODO_FIX_PI4
-		 	irqs.system_timer.irq0 = (0x60); //96
+		case 4:
+			irqs.system_timer.irq0 = (0x60); //96
 			irqs.system_timer.irq1 = (0x61); //97
 			irqs.system_timer.irq2 = (0x62); //98
 			irqs.system_timer.irq3 = (0x63); //99
+
+			// Initialize GIC: enable distributor, set priority mask, enable CPU interface
+			put32(GICD_CTLR, 1);
+			put32(GICC_PMR, 0xFF);
+			put32(GICC_CTLR, 1);
 
 			assign_target(irqs.system_timer.irq1, 0);
 			enable_interrupt(irqs.system_timer.irq1);

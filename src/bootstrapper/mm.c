@@ -7,6 +7,7 @@
 uint16_t *mem_map;
 static uint16_t pi3_mem_map[PI3_PAGING_PAGES];
 static uint16_t pi4_mem_map[PI4_PAGING_PAGES];
+static int mem_map_pages;
 
 void init_mem_map()
 {
@@ -20,7 +21,12 @@ void init_mem_map()
 			pages = PI4_PAGING_PAGES;
 			mem_map = pi4_mem_map;
 			break;
+		default:
+			pages = PI3_PAGING_PAGES;
+			mem_map = pi3_mem_map;
+			break;
 	}
+	mem_map_pages = pages;
 	for (int i = 0; i < pages; i++){
 		mem_map[i] = 0;
 	}
@@ -45,7 +51,7 @@ uint64_t allocate_user_page(struct task_struct *task, uint64_t va) {
 
 uint64_t get_free_page()
 {
-	for (int i = 0; i < PI3_PAGING_PAGES; i++){ // TODO_FIX_PI4
+	for (int i = 0; i < mem_map_pages; i++){
 	if (mem_map[i] == 0){
 			mem_map[i] = 1;
 			uint64_t page = LOW_MEMORY + i*PAGE_SIZE;

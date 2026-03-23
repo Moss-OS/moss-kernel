@@ -1,16 +1,20 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "peripherals/mini_uart.h"
+#include "peripherals/uart.h"
+#include "common/pi.h"
 #include "stdio.h"
 #include "stdlib.h"
 
 char getc() {
+    if (pi_ver == 4) return (char)uart_recv();
     return mini_uart_recv();
 }
 
 void putc ( void* p, char c)
 {
-	mini_uart_send(c);
+	if (pi_ver == 4) uart_send((unsigned char)c);
+	else mini_uart_send(c);
 }
 
 void puts(const char * str) {
